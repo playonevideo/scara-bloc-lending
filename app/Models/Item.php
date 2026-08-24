@@ -11,9 +11,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Object extends Model
+class Item extends Model
 {
     use SoftDeletes;
+
+    protected $table = 'objects';
 
     protected $fillable = [
         'owner_id',
