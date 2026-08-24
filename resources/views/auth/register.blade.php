@@ -4,15 +4,16 @@
 
 @section('content')
     <h1 class="text-xl font-semibold text-gray-900">Creează-ți contul</h1>
-    <p class="mt-1 text-sm text-gray-500">Ai fost invitat(ă) să te alături comunității.
-        @if ($invitation->apartment)
-            Apartamentul asociat: <strong>{{ $invitation->apartment->fullLabel() }}</strong>.
+    <p class="mt-1 text-sm text-gray-500">
+        Ai fost invitat(ă) să te alături comunității.
+        @if ($apartment)
+            Apartamentul asociat: <strong>{{ $apartment->fullLabel() }}</strong>.
         @endif
     </p>
 
     <form method="POST" action="{{ route('register.store') }}" class="mt-6 space-y-5">
         @csrf
-        <input type="hidden" name="code" value="{{ $invitation->code }}">
+        <input type="hidden" name="code" value="{{ $code }}">
 
         <div>
             <label for="name" class="block text-sm font-medium text-gray-700">Nume complet</label>
