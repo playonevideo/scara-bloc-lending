@@ -27,16 +27,27 @@ class CommunityRequestResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
+                    ->label('Locatar')
                     ->relationship('user', 'name')
-                    ->required(),
+                    ->required()
+                    ->searchable(),
                 Forms\Components\Select::make('category_id')
+                    ->label('Categorie')
                     ->relationship('category', 'name'),
                 Forms\Components\TextInput::make('title')
-                    ->required(),
+                    ->label('Titlu')
+                    ->required()
+                    ->maxLength(255),
                 Forms\Components\Textarea::make('description')
+                    ->label('Descriere')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('status')
+                Forms\Components\Select::make('status')
+                    ->label('Status')
+                    ->options([
+                        'open' => 'Deschisă',
+                        'closed' => 'Închisă',
+                    ])
                     ->required(),
             ]);
     }
@@ -45,36 +56,29 @@ class CommunityRequestResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('category.name')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('title')
+                    ->label('Titlu')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Locatar')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Categorie'),
                 Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state) => $state === 'open' ? 'success' : 'gray')
+                    ->formatStateUsing(fn (string $state) => $state === 'open' ? 'Deschisă' : 'Închisă'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creat')
+                    ->dateTime('d.m.Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array

@@ -96,7 +96,7 @@
                             <input type="hidden" name="user_id" value="{{ $object->owner_id }}">
                             <input type="hidden" name="object_id" value="{{ $object->id }}">
                             <button type="submit" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50">
-                                Mesajează proprietarul
+                                Trimite un mesaj proprietarului
                             </button>
                         </form>
                     @endif

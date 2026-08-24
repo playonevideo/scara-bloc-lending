@@ -27,18 +27,27 @@ class ReviewResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('loan_id')
+                    ->label('Împrumut')
                     ->relationship('loan', 'id')
                     ->required(),
                 Forms\Components\Select::make('reviewer_id')
+                    ->label('Evaluator')
                     ->relationship('reviewer', 'name')
-                    ->required(),
-                Forms\Components\Select::make('reviewee_id')
-                    ->relationship('reviewee', 'name')
-                    ->required(),
-                Forms\Components\TextInput::make('rating')
                     ->required()
-                    ->numeric(),
+                    ->searchable(),
+                Forms\Components\Select::make('reviewee_id')
+                    ->label('Evaluat')
+                    ->relationship('reviewee', 'name')
+                    ->required()
+                    ->searchable(),
+                Forms\Components\TextInput::make('rating')
+                    ->label('Notă (1–5)')
+                    ->required()
+                    ->numeric()
+                    ->minValue(1)
+                    ->maxValue(5),
                 Forms\Components\Textarea::make('comment')
+                    ->label('Comentariu')
                     ->columnSpanFull(),
             ]);
     }
@@ -48,37 +57,27 @@ class ReviewResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('loan.id')
-                    ->numeric()
+                    ->label('Împrumut')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('reviewer.name')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Evaluator')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('reviewee.name')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Evaluat')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('rating')
-                    ->numeric()
+                    ->label('Notă')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creat')
+                    ->dateTime('d.m.Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array

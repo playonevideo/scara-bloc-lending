@@ -27,15 +27,20 @@ class MessageResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('conversation_id')
+                    ->label('Conversație')
                     ->relationship('conversation', 'id')
                     ->required(),
                 Forms\Components\Select::make('sender_id')
+                    ->label('Expeditor')
                     ->relationship('sender', 'name')
-                    ->required(),
+                    ->required()
+                    ->searchable(),
                 Forms\Components\Textarea::make('body')
+                    ->label('Conținut')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\DateTimePicker::make('read_at'),
+                Forms\Components\DateTimePicker::make('read_at')
+                    ->label('Citit la'),
             ]);
     }
 
@@ -44,34 +49,29 @@ class MessageResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('conversation.id')
-                    ->numeric()
+                    ->label('Conversație')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('sender.name')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Expeditor')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('body')
+                    ->label('Conținut')
+                    ->limit(60),
                 Tables\Columns\TextColumn::make('read_at')
-                    ->dateTime()
+                    ->label('Citit la')
+                    ->dateTime('d.m.Y H:i')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creat')
+                    ->dateTime('d.m.Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array

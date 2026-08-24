@@ -64,7 +64,7 @@
                         class="absolute right-0 mt-2 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-lg sm:w-80">
                         <div class="flex items-center justify-between border-b border-gray-100 px-4 py-3">
                             <p class="text-sm font-semibold text-gray-900">Mesaje</p>
-                            <a href="{{ route('conversations.index') }}" class="text-xs font-medium text-brand-600 hover:text-brand-700">Vezi toate</a>
+                            <a href="{{ route('conversations.index') }}" class="text-xs font-medium text-brand-600 hover:text-brand-700">Vezi toate mesajele</a>
                         </div>
                         <div class="max-h-96 overflow-y-auto">
                             @forelse ($recentConversations as $conversation)
@@ -100,7 +100,7 @@
                         class="absolute right-0 mt-2 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-lg sm:w-80">
                         <div class="flex items-center justify-between border-b border-gray-100 px-4 py-3">
                             <p class="text-sm font-semibold text-gray-900">Notificări</p>
-                            <a href="{{ route('notifications.index') }}" class="text-xs font-medium text-brand-600 hover:text-brand-700">Vezi toate</a>
+                            <a href="{{ route('notifications.index') }}" class="text-xs font-medium text-brand-600 hover:text-brand-700">Vezi toate notificările</a>
                         </div>
                         <div class="max-h-96 overflow-y-auto">
                             @forelse ($recentNotifications as $notification)

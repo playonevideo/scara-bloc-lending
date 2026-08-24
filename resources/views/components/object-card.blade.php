@@ -35,7 +35,7 @@
 
         <div class="mt-auto flex items-center justify-between pt-3">
             <span class="text-sm text-gray-500">{{ $object->owner->name }} · {{ $object->owner->locationLabel() }}</span>
-            <span class="text-sm font-medium text-brand-600">Vezi detalii →</span>
+            <span class="text-sm font-medium text-brand-600">Vezi detaliile →</span>
         </div>
     </div>
 </a>

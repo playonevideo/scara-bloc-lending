@@ -61,7 +61,7 @@
     </script>
 
     <div class="mt-6 border-t border-gray-100 pt-6 text-center">
-        <p class="text-sm text-gray-500">Nu ai încă un cont?</p>
-        <p class="mt-1 text-sm text-gray-500">Conturile se creează doar prin invitație din partea administratorului.</p>
+        <p class="text-sm text-gray-500">Ești nou în comunitate?</p>
+        <p class="mt-1 text-sm text-gray-500">Conturile se creează exclusiv prin invitație din partea administratorului.</p>
     </div>
 @endsection

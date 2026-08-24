@@ -13,7 +13,7 @@
 
     @if ($notifications->isEmpty())
         <div class="rounded-2xl border border-dashed border-gray-200 bg-white p-12 text-center text-gray-500">
-            Nu ai notificări.
+            Nu ai încă nicio notificare.
         </div>
     @else
         <div class="space-y-2">
