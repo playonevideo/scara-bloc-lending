@@ -65,4 +65,21 @@ class SecurityTest extends TestCase
 
         $this->assertDatabaseCount('two_factor_challenges', 2);
     }
+
+    public function test_remove_phone_clears_number_and_disables_2fa(): void
+    {
+        $user = User::factory()->create([
+            'phone' => '0767965218',
+            'phone_verified_at' => now(),
+            'two_factor_enabled' => true,
+        ]);
+
+        $this->actingAs($user)->post('/setari/securitate/telefon/sterge')->assertRedirect();
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'phone' => null,
+            'two_factor_enabled' => false,
+        ]);
+    }
 }

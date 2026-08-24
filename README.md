@@ -223,7 +223,7 @@ După rularea `php artisan migrate:fresh --seed`, sunt disponibile:
 |---------------|------------------|-----------|
 | Administrator | `admin@vecini.ro` | `password` |
 
-> Administratorul demo are autentificarea în doi pași activă pe numărul `0767965218`. Fiecare locatar își poate schimba numărul de telefon pentru 2FA din **Profil → Securitate**, cu confirmare prin WhatsApp pe noul număr și parola contului. În dezvoltare (`SMS_PROVIDER=log`), codul de verificare este scris în `storage/logs/laravel.log`.
+> Fiecare locatar își poate seta, schimba sau elimina numărul de telefon pentru 2FA din **Profil → Securitate** (schimbarea necesită confirmare prin WhatsApp pe noul număr și parola contului). În dezvoltare (`SMS_PROVIDER=log`), codul de verificare este scris în `storage/logs/laravel.log`.
 
 Locatarii demo au emailuri de forma `nume@vecini.ro` (ex. `andrei@vecini.ro`) și parola `password`.
 
