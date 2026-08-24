@@ -8,29 +8,51 @@ use App\Http\Requests\Auth\RegisterResidentRequest;
 use App\Models\Invitation;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    public function create(string $code): View
+    public function showCodeForm(): View
     {
-        $invitation = Invitation::query()->where('code', $code)->first();
+        return view('auth.enter-code');
+    }
 
-        if (! $invitation || ! $invitation->isUsable()) {
-            abort(404, 'Invitația nu este validă sau a expirat.');
+    public function verifyCode(Request $request): RedirectResponse
+    {
+        $request->validate(['code' => ['required', 'string', 'max:255']]);
+
+        $code = $request->string('code')->toString();
+
+        if (! $this->resolveCode($code)) {
+            return back()->withErrors(['code' => 'Codul de invitație nu este valid sau a expirat.']);
         }
 
-        return view('auth.register', ['invitation' => $invitation]);
+        return redirect()->route('register', ['code' => $code]);
+    }
+
+    public function create(string $code): View
+    {
+        $context = $this->resolveCode($code);
+
+        if (! $context) {
+            abort(404, 'Codul de invitație nu este valid sau a expirat.');
+        }
+
+        return view('auth.register', [
+            'code' => $code,
+            'apartment' => $context['invitation']?->apartment,
+        ]);
     }
 
     public function store(RegisterResidentRequest $request): RedirectResponse
     {
-        $invitation = $request->invitation();
+        $context = $this->resolveCode($request->string('code')->toString());
 
-        if (! $invitation->isUsable()) {
-            return back()->withErrors(['code' => 'Invitația nu mai este validă sau a expirat.']);
+        if (! $context) {
+            return back()->withErrors(['code' => 'Codul de invitație nu este valid sau a expirat.']);
         }
 
         $user = User::create([
@@ -39,17 +61,47 @@ class RegisteredUserController extends Controller
             'phone' => $request->input('phone'),
             'password' => $request->input('password'),
             'role' => Role::Resident,
-            'apartment_id' => $invitation->apartment_id,
+            'apartment_id' => $context['apartment_id'],
         ]);
 
-        $invitation->update([
-            'used_at' => now(),
-            'used_by' => $user->id,
-        ]);
+        if ($context['invitation']) {
+            $context['invitation']->update([
+                'used_at' => now(),
+                'used_by' => $user->id,
+            ]);
+        }
 
         Auth::login($user);
         $request->session()->regenerate();
 
         return redirect()->route('dashboard');
+    }
+
+    /**
+     * Resolve an invitation code to a registration context.
+     *
+     * @return array{invitation: ?Invitation, apartment_id: ?int}|null
+     */
+    private function resolveCode(string $code): ?array
+    {
+        $invitation = Invitation::query()->where('code', $code)->first();
+
+        if ($invitation && $invitation->isUsable()) {
+            return [
+                'invitation' => $invitation,
+                'apartment_id' => $invitation->apartment_id,
+            ];
+        }
+
+        $communityCode = config('app.community_invitation_code');
+
+        if ($communityCode && hash_equals($communityCode, $code)) {
+            return [
+                'invitation' => null,
+                'apartment_id' => null,
+            ];
+        }
+
+        return null;
     }
 }

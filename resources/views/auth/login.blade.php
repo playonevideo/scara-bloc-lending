@@ -62,6 +62,8 @@
 
     <div class="mt-6 border-t border-gray-100 pt-6 text-center">
         <p class="text-sm text-gray-500">Ești nou în comunitate?</p>
-        <p class="mt-1 text-sm text-gray-500">Conturile se creează exclusiv prin invitație din partea administratorului.</p>
+        <a href="{{ route('register.code') }}" class="mt-1 inline-block text-sm font-medium text-brand-600 hover:text-brand-700">
+            Creează un cont cu un cod de invitație
+        </a>
     </div>
 @endsection

@@ -86,6 +86,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Community Invitation Code
+    |--------------------------------------------------------------------------
+    |
+    | A shared invitation code that grants access to the community without
+    | an individual invitation record (no apartment is assigned). Used for
+    | demo/testing purposes; keep it secret in production.
+    |
+    */
+
+    'community_invitation_code' => env('COMMUNITY_INVITATION_CODE'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Encryption Key
     |--------------------------------------------------------------------------
     |
