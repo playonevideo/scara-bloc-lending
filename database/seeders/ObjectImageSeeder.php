@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Item;
+use App\Models\ObjectImage;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class ObjectImageSeeder extends Seeder
@@ -21,21 +23,64 @@ class ObjectImageSeeder extends Seeder
 
     public function run(): void
     {
-        $items = Item::query()->doesntHave('images')->get();
+        $this->clearExisting();
+
+        $items = Item::query()->get();
 
         foreach ($items as $index => $item) {
             $icon = $item->category?->icon ?? '📦';
             [$from, $to] = self::PALETTE[$index % count(self::PALETTE)];
 
-            $path = 'objects/demo/'.$item->slug.'.svg';
-
-            Storage::disk('public')->put($path, $this->renderSvg($item->title, $icon, $from, $to));
+            $path = $this->downloadPhoto($item)
+                ?? $this->writeFallback($item, $icon, $from, $to);
 
             $item->images()->create([
                 'path' => $path,
                 'sort_order' => 0,
             ]);
         }
+    }
+
+    /**
+     * Remove previously generated demo images so re-seeding refreshes them.
+     */
+    private function clearExisting(): void
+    {
+        ObjectImage::query()->delete();
+        Storage::disk('public')->deleteDirectory('objects');
+    }
+
+    /**
+     * Download a real photo from Lorem Picsum (Unsplash-sourced) seeded by the object slug.
+     */
+    private function downloadPhoto(Item $item): ?string
+    {
+        $url = 'https://picsum.photos/seed/'.urlencode($item->slug).'/800/600';
+
+        try {
+            // withoutVerifying() is used because the local PHP build may lack a CA bundle;
+            // the placeholder images are public and non-sensitive.
+            $response = Http::withoutVerifying()->timeout(20)->get($url);
+
+            if ($response->successful()) {
+                $path = 'objects/'.$item->slug.'.jpg';
+                Storage::disk('public')->put($path, $response->body());
+
+                return $path;
+            }
+        } catch (\Throwable) {
+            // Fall through to the generated placeholder.
+        }
+
+        return null;
+    }
+
+    private function writeFallback(Item $item, string $icon, string $from, string $to): string
+    {
+        $path = 'objects/'.$item->slug.'.svg';
+        Storage::disk('public')->put($path, $this->renderSvg($item->title, $icon, $from, $to));
+
+        return $path;
     }
 
     private function renderSvg(string $title, string $icon, string $from, string $to): string
