@@ -32,7 +32,9 @@ class TwoFactorService
     public function verify(string $secret, string $code): bool
     {
         try {
-            return (new Google2FA)->verifyKey($secret, $code);
+            // Window of 3 periods (≈ ±90 seconds) tolerates small clock skew
+            // between the server and the user's authenticator device.
+            return (new Google2FA)->verifyKey($secret, $code, 3);
         } catch (\Throwable) {
             return false;
         }
