@@ -21,9 +21,23 @@ class TwilioSmsProvider implements SmsProvider
             ? new Client($this->sid, $this->token, $this->accountSid)
             : new Client($this->sid, $this->token);
 
-        $client->messages->create($to, [
+        $client->messages->create($this->normalize($to), [
             'from' => $this->from,
             'body' => $message,
         ]);
+    }
+
+    /**
+     * Convert Romanian local numbers ("07...") to E.164 ("+407...").
+     */
+    private function normalize(string $phone): string
+    {
+        $phone = trim($phone);
+
+        if (preg_match('/^0(\d{9})$/', $phone)) {
+            return '+40'.substr($phone, 1);
+        }
+
+        return $phone;
     }
 }
