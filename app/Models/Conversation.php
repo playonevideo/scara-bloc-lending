@@ -13,7 +13,7 @@ class Conversation extends Model
 
     public function object(): BelongsTo
     {
-        return $this->belongsTo(Object::class);
+        return $this->belongsTo(Item::class);
     }
 
     public function loan(): BelongsTo

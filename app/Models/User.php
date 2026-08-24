@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'role',
         'apartment_id',
+        'two_factor_enabled',
         'is_blocked',
         'blocked_at',
         'show_apartment',
@@ -45,6 +46,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'role' => Role::class,
             'is_blocked' => 'boolean',
+            'two_factor_enabled' => 'boolean',
             'blocked_at' => 'datetime',
             'show_apartment' => 'boolean',
             'show_floor' => 'boolean',
@@ -61,7 +63,7 @@ class User extends Authenticatable
 
     public function objects(): HasMany
     {
-        return $this->hasMany(Object::class, 'owner_id');
+        return $this->hasMany(Item::class, 'owner_id');
     }
 
     public function loansAsBorrower(): HasMany
@@ -80,9 +82,9 @@ class User extends Authenticatable
             Conversation::class,
             ConversationParticipant::class,
             'user_id',
+            'conversation_id',
             'id',
-            'id',
-            'conversation_id'
+            'id'
         );
     }
 
