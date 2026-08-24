@@ -148,18 +148,27 @@
             </div>
 
             @if ($attachments)
-                <div class="flex flex-wrap gap-2 border-t border-gray-100 px-4 py-2">
-                    @foreach ($attachments as $index => $attachment)
-                        <div class="flex items-center gap-2 rounded-xl bg-gray-50 px-2 py-1.5 ring-1 ring-gray-200">
-                            @if ($attachment->isPreviewable())
-                                <img src="{{ $attachment->temporaryUrl() }}" alt="" class="h-9 w-9 rounded-lg object-cover">
-                            @endif
-                            <div class="max-w-[10rem]">
-                                <p class="truncate text-xs font-medium text-gray-700">✓ {{ $attachment->getClientOriginalName() }}</p>
+                <div x-data="{ previewUrl: null }" class="border-t border-gray-100 px-4 py-2">
+                    <div class="flex flex-wrap gap-2">
+                        @foreach ($attachments as $index => $attachment)
+                            <div class="flex items-center gap-2 rounded-xl bg-gray-50 px-2 py-1.5 ring-1 ring-gray-200">
+                                @if ($attachment->isPreviewable())
+                                    <button type="button" @click="previewUrl = '{{ $attachment->temporaryUrl() }}'" class="shrink-0 overflow-hidden rounded-lg" title="Vezi preview">
+                                        <img src="{{ $attachment->temporaryUrl() }}" alt="" class="h-9 w-9 object-cover transition hover:opacity-80">
+                                    </button>
+                                @endif
+                                <div class="max-w-[10rem]">
+                                    <p class="truncate text-xs font-medium text-gray-700">✓ {{ $attachment->getClientOriginalName() }}</p>
+                                </div>
+                                <button type="button" wire:click="removeAttachment({{ $index }})" class="text-xs text-gray-400 hover:text-red-500" title="Elimină">✕</button>
                             </div>
-                            <button type="button" wire:click="removeAttachment({{ $index }})" class="text-xs text-gray-400 hover:text-red-500" title="Elimină">✕</button>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
+
+                    <div x-show="previewUrl" x-cloak @click="previewUrl = null" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+                        <button type="button" @click="previewUrl = null" class="absolute right-4 top-4 rounded-full bg-white/20 p-2 text-white hover:bg-white/30" title="Închide">✕</button>
+                        <img :src="previewUrl" @click.stop class="max-h-full max-w-full rounded-lg shadow-2xl">
+                    </div>
                 </div>
             @endif
 
