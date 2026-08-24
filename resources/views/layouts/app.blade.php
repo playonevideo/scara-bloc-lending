@@ -13,7 +13,25 @@
 <body class="min-h-full bg-gray-50 font-sans text-gray-900 antialiased">
 
     @php
-        $unreadCount = auth()->user()->unreadNotifications()->count();
+        $user = auth()->user();
+        $unreadNotificationCount = $user->unreadNotifications()->count();
+        $recentNotifications = $user->notifications()->latest()->limit(6)->get();
+
+        $conversations = $user->conversations()
+            ->with(['messages', 'participants'])
+            ->get()
+            ->filter(fn ($c) => $c->messages->isNotEmpty())
+            ->map(function ($c) use ($user) {
+                $c->setAttribute('unread', $c->messages->where('sender_id', '!=', $user->id)->whereNull('read_at')->count());
+                $c->setAttribute('latestMessage', $c->messages->last());
+
+                return $c;
+            })
+            ->sortByDesc(fn ($c) => $c->latestMessage?->created_at)
+            ->values();
+
+        $unreadMessageCount = $conversations->sum('unread');
+        $recentConversations = $conversations->take(5);
     @endphp
 
     <header class="sticky top-0 z-40 border-b border-gray-200 bg-white/90 backdrop-blur">
@@ -27,7 +45,6 @@
                 <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">Acasă</x-nav-link>
                 <x-nav-link href="{{ route('objects.index') }}" :active="request()->routeIs('objects.*')">Obiecte</x-nav-link>
                 <x-nav-link href="{{ route('loans.index') }}" :active="request()->routeIs('loans.*')">Împrumuturi</x-nav-link>
-                <x-nav-link href="{{ route('conversations.index') }}" :active="request()->routeIs('conversations.*')">Mesaje</x-nav-link>
             </nav>
 
             <div class="flex items-center gap-1 sm:gap-2">
@@ -36,12 +53,73 @@
                     Adaugă
                 </a>
 
-                <a href="{{ route('notifications.index') }}" class="relative rounded-xl p-2 text-gray-600 transition hover:bg-gray-100" aria-label="Notificări">
-                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
-                    @if ($unreadCount > 0)
-                        <span class="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">{{ $unreadCount > 9 ? '9+' : $unreadCount }}</span>
-                    @endif
-                </a>
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open" class="relative rounded-xl p-2 text-gray-600 transition hover:bg-gray-100" aria-label="Mesaje" :aria-expanded="open">
+                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
+                        @if ($unreadMessageCount > 0)
+                            <span class="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">{{ $unreadMessageCount > 9 ? '9+' : $unreadMessageCount }}</span>
+                        @endif
+                    </button>
+                    <div x-show="open" @click.outside="open = false" x-cloak x-transition
+                        class="absolute right-0 mt-2 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-lg sm:w-80">
+                        <div class="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+                            <p class="text-sm font-semibold text-gray-900">Mesaje</p>
+                            <a href="{{ route('conversations.index') }}" class="text-xs font-medium text-brand-600 hover:text-brand-700">Vezi toate</a>
+                        </div>
+                        <div class="max-h-96 overflow-y-auto">
+                            @forelse ($recentConversations as $conversation)
+                                @php $other = $conversation->otherParticipant($user); @endphp
+                                <a href="{{ route('conversations.show', $conversation) }}" class="flex items-center gap-3 border-b border-gray-50 px-4 py-3 transition last:border-0 hover:bg-gray-50">
+                                    <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">{{ $other ? strtoupper(mb_substr($other->name, 0, 1)) : '?' }}</span>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <p class="truncate text-sm font-medium text-gray-900">{{ $other?->name ?? '—' }}</p>
+                                            <span class="shrink-0 text-[10px] text-gray-400">{{ $conversation->latestMessage?->created_at?->diffForHumans() }}</span>
+                                        </div>
+                                        <p class="truncate text-xs text-gray-500">{{ $conversation->latestMessage?->body }}</p>
+                                    </div>
+                                    @if ($conversation->unread > 0)
+                                        <span class="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-brand-600 px-1 text-[10px] font-bold text-white">{{ $conversation->unread }}</span>
+                                    @endif
+                                </a>
+                            @empty
+                                <p class="px-4 py-6 text-center text-sm text-gray-400">Nu ai conversații încă.</p>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open" class="relative rounded-xl p-2 text-gray-600 transition hover:bg-gray-100" aria-label="Notificări" :aria-expanded="open">
+                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+                        @if ($unreadNotificationCount > 0)
+                            <span class="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">{{ $unreadNotificationCount > 9 ? '9+' : $unreadNotificationCount }}</span>
+                        @endif
+                    </button>
+                    <div x-show="open" @click.outside="open = false" x-cloak x-transition
+                        class="absolute right-0 mt-2 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-lg sm:w-80">
+                        <div class="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+                            <p class="text-sm font-semibold text-gray-900">Notificări</p>
+                            <a href="{{ route('notifications.index') }}" class="text-xs font-medium text-brand-600 hover:text-brand-700">Vezi toate</a>
+                        </div>
+                        <div class="max-h-96 overflow-y-auto">
+                            @forelse ($recentNotifications as $notification)
+                                @php $data = $notification->data; @endphp
+                                <a href="{{ $data['url'] ?? route('notifications.index') }}"
+                                    @class(['flex items-start gap-3 border-b border-gray-50 px-4 py-3 transition last:border-0 hover:bg-gray-50', 'bg-brand-50/50' => $notification->unread()])>
+                                    <span @class(['mt-1.5 h-2 w-2 flex-shrink-0 rounded-full', 'bg-brand-500' => $notification->unread(), 'bg-gray-200' => $notification->read()])></span>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-sm font-medium text-gray-900">{{ $data['title'] ?? 'Notificare' }}</p>
+                                        <p class="truncate text-xs text-gray-500">{{ $data['message'] ?? '' }}</p>
+                                        <p class="mt-0.5 text-[10px] text-gray-400">{{ $notification->created_at->diffForHumans() }}</p>
+                                    </div>
+                                </a>
+                            @empty
+                                <p class="px-4 py-6 text-center text-sm text-gray-400">Nu ai notificări.</p>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
 
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = !open" class="flex items-center gap-2 rounded-xl p-1.5 transition hover:bg-gray-100" aria-haspopup="true" :aria-expanded="open">
