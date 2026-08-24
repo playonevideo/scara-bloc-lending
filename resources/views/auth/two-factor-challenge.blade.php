@@ -13,7 +13,7 @@
             <label for="code" class="block text-sm font-medium text-gray-700">Cod de verificare</label>
             <input id="code" type="text" name="code" inputmode="numeric" pattern="[0-9]*" maxlength="6" required autofocus autocomplete="one-time-code"
                 placeholder="••••••"
-                class="mt-1 block w-full rounded-xl border-gray-300 text-center text-2xl tracking-[0.5em] shadow-sm focus:border-brand-500 focus:ring-brand-500">
+                class="mt-1 block w-full rounded-xl border-0 bg-gray-100 px-4 py-2.5 text-center text-2xl tracking-[0.5em] text-gray-900 placeholder-gray-400 focus:bg-white focus:ring-2 focus:ring-brand-500">
         </div>
 
         <button type="submit"
