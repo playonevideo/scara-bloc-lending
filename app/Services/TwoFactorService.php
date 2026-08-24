@@ -13,13 +13,18 @@ class TwoFactorService
     public function __construct(private readonly SmsManager $sms) {}
 
     /**
-     * Generate and send a one-time code to the user's phone.
+     * Generate and send a one-time code.
+     *
+     * When $phone is given it is used instead of the user's current phone,
+     * which is used for confirming a phone number change.
      *
      * @throws RuntimeException when the phone is missing or the user is throttled.
      */
-    public function sendCode(User $user): string
+    public function sendCode(User $user, ?string $phone = null): string
     {
-        if (! $user->phone) {
+        $to = $phone ?? $user->phone;
+
+        if (! $to) {
             throw new RuntimeException('Nu există un număr de telefon asociat contului.');
         }
 
@@ -34,7 +39,7 @@ class TwoFactorService
             'expires_at' => now()->addMinutes((int) config('sms.code.expires_minutes', 10)),
         ]);
 
-        $this->sms->send($user->phone, "Codul tău de verificare Vecini este: {$code}");
+        $this->sms->send($to, "Codul tău de verificare Vecini este: {$code}");
 
         return $code;
     }
