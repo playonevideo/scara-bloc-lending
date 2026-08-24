@@ -91,6 +91,8 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/profil', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/setari/securitate', [SecurityController::class, 'show'])->name('security.show');
+    Route::post('/setari/securitate/2fa', [SecurityController::class, 'toggleTwoFactor'])->name('security.toggle-2fa');
+    Route::post('/setari/securitate/parola', [SecurityController::class, 'updatePassword'])->name('security.update-password');
 
     // Favorites
     Route::get('/favorite', [FavoriteController::class, 'index'])->name('favorites.index');
