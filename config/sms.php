@@ -31,7 +31,7 @@ return [
         'length' => (int) env('SMS_CODE_LENGTH', 6),
         'expires_minutes' => (int) env('SMS_CODE_EXPIRES_MINUTES', 10),
         'max_attempts' => (int) env('SMS_CODE_MAX_ATTEMPTS', 5),
-        'throttle_seconds' => (int) env('SMS_CODE_THROTTLE_SECONDS', 60),
+        'throttle_seconds' => (int) env('SMS_CODE_THROTTLE_SECONDS', 30),
     ],
 
 ];
