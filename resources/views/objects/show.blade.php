@@ -63,6 +63,13 @@
                     @endif
                 </dl>
 
+                <div class="mt-6 flex flex-wrap items-center gap-6">
+                    <div class="rounded-xl bg-gray-50 p-3">
+                        {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(110)->generate(route('objects.show', $object)) !!}
+                        <p class="mt-1 text-center text-xs text-gray-400">Cod QR al obiectului</p>
+                    </div>
+                </div>
+
                 <div class="mt-6 flex flex-wrap items-center gap-3">
                     @if ($canRequest)
                         <button type="button" x-data @click="document.getElementById('loan-form').classList.toggle('hidden')"
