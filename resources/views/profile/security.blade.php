@@ -64,6 +64,11 @@
                 <form method="POST" action="{{ route('security.verify-phone') }}" class="mt-4 space-y-4 rounded-xl bg-gray-50 p-4">
                     @csrf
                     <p class="text-sm text-gray-600">Am trimis un cod pe <strong>{{ session('auth.pending_phone') }}</strong>.</p>
+                    @if (session('sms_code'))
+                        <p class="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800 ring-1 ring-amber-200">
+                            Mod dezvoltare — codul de verificare: <strong class="tracking-widest">{{ session('sms_code') }}</strong>
+                        </p>
+                    @endif
                     <div>
                         <label for="code" class="block text-sm font-medium text-gray-700">Cod de verificare</label>
                         <input id="code" type="text" name="code" inputmode="numeric" maxlength="6" required
