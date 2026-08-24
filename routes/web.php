@@ -47,6 +47,23 @@ Route::middleware('guest')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| WebAuthn / Passkeys
+|--------------------------------------------------------------------------
+*/
+Route::prefix('webauthn')->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::post('login/options', [\App\Http\Controllers\WebAuthn\WebAuthnLoginController::class, 'options']);
+        Route::post('login', [\App\Http\Controllers\WebAuthn\WebAuthnLoginController::class, 'login']);
+    });
+
+    Route::middleware('auth')->group(function () {
+        Route::post('register/options', [\App\Http\Controllers\WebAuthn\WebAuthnRegisterController::class, 'options']);
+        Route::post('register', [\App\Http\Controllers\WebAuthn\WebAuthnRegisterController::class, 'register']);
+    });
+});
+
+/*
+|--------------------------------------------------------------------------
 | Authenticated resident area
 |--------------------------------------------------------------------------
 */
@@ -93,6 +110,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/setari/securitate', [SecurityController::class, 'show'])->name('security.show');
     Route::post('/setari/securitate/2fa', [SecurityController::class, 'toggleTwoFactor'])->name('security.toggle-2fa');
     Route::post('/setari/securitate/parola', [SecurityController::class, 'updatePassword'])->name('security.update-password');
+    Route::post('/setari/securitate/passkeys/{credential}', [SecurityController::class, 'removePasskey'])->name('security.remove-passkey');
 
     // Favorites
     Route::get('/favorite', [FavoriteController::class, 'index'])->name('favorites.index');

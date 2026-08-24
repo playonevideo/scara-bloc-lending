@@ -12,11 +12,15 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laragear\WebAuthn\Contracts\WebAuthnAuthenticatable;
+use Laragear\WebAuthn\WebAuthnAuthentication;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, WebAuthnAuthenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, WebAuthnAuthentication;
 
     protected $fillable = [
         'name',
@@ -108,6 +112,11 @@ class User extends Authenticatable implements FilamentUser
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->isAdmin() && ! $this->isBlocked();
+    }
+
+    public function webAuthnId(): UuidInterface
+    {
+        return Uuid::uuid5(Uuid::NAMESPACE_OID, 'user-'.$this->getKey());
     }
 
     public function isSuperAdmin(): bool

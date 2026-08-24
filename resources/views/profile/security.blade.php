@@ -38,8 +38,29 @@
 
         <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
             <h2 class="font-semibold text-gray-900">Chei de acces (Passkeys)</h2>
-            <p class="mt-1 text-sm text-gray-500">Autentifică-te rapid și sigur cu amprenta, Face ID sau Windows Hello. Această opțiune este disponibilă pe pagina de autentificare.</p>
-            <a href="{{ route('login') }}" class="mt-3 inline-block text-sm font-medium text-brand-600 hover:text-brand-700">Configurează passkey-ul →</a>
+            <p class="mt-1 text-sm text-gray-500">Autentifică-te rapid și sigur cu amprenta, Face ID sau Windows Hello. Poți înregistra mai multe chei de acces.</p>
+
+            <div class="mt-4 space-y-2">
+                @forelse ($user->webAuthnCredentials as $credential)
+                    <div class="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-2.5">
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">{{ $credential->alias ?? 'Passkey' }}</p>
+                            <p class="text-xs text-gray-400">Creat la {{ $credential->created_at?->format('d.m.Y') }}</p>
+                        </div>
+                        <form method="POST" action="{{ route('security.remove-passkey', $credential->id) }}">
+                            @csrf
+                            <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-700">Elimină</button>
+                        </form>
+                    </div>
+                @empty
+                    <p class="text-sm text-gray-400">Nu ai înregistrat încă nicio cheie de acces.</p>
+                @endforelse
+            </div>
+
+            <button type="button" onclick="registerPasskey()"
+                class="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700">
+                Înregistrează passkey
+            </button>
         </div>
 
         <form method="POST" action="{{ route('security.update-password') }}" class="space-y-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">

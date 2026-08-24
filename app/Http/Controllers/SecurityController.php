@@ -51,4 +51,11 @@ class SecurityController extends Controller
 
         return back()->with('status', 'Parola a fost schimbată.');
     }
+
+    public function removePasskey(Request $request, string $credential): RedirectResponse
+    {
+        $request->user()->webAuthnCredentials()->whereKey($credential)->first()?->delete();
+
+        return back()->with('status', 'Cheia de acces a fost eliminată.');
+    }
 }
