@@ -1,4 +1,4 @@
-<div class="flex h-full overflow-hidden bg-white">
+<div class="flex h-[calc(100vh-8rem)] overflow-hidden bg-white md:h-[calc(100vh-4rem)]">
     {{-- Conversation list --}}
     <div @class([
         'flex h-full flex-col border-r border-gray-100',
