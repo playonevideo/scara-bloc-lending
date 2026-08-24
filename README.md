@@ -17,7 +17,7 @@ Scopul este încurajarea colaborării între vecini, reducerea cumpărării inut
 - **Sistem de rating** (1–5 stele) și reputație a locatarilor.
 - **Raportare și moderare** (obiecte, descrieri, spam, comportament abuziv, mesaje).
 - **Panou de administrare Filament** complet separat de interfața locatarului, cu statistici, grafice și jurnal de audit.
-- **Autentificare modernă**: parole + WebAuthn / Passkeys (amprentă, Face ID, Windows Hello) + autentificare în doi pași prin WhatsApp.
+- **Autentificare modernă**: parole + WebAuthn / Passkeys (amprentă, Face ID, Windows Hello) + autentificare în doi pași (TOTP / aplicație de autentificare).
 - **Sistem de invitații** — comunitatea este privată; conturile se creează doar prin invitație.
 - **Roluri**: Administrator și Locatar.
 - **Confidențialitate (GDPR)**: controlul vizibilității datelor, minimizarea datelor, anonimizare la ștergere.
@@ -32,7 +32,7 @@ Scopul este încurajarea colaborării între vecini, reducerea cumpărării inut
 - **ORM**: Eloquent
 - **Admin**: Filament 3 (Resources, Tables, Forms, Actions, Notifications, Widgets)
 - **Frontend locatar**: Blade + Livewire 3 + Alpine.js + Tailwind CSS 4
-- **Autentificare**: [laragear/webauthn](https://github.com/Laragear/WebAuthn) (WebAuthn / Passkeys), Meta WhatsApp Cloud API (2FA prin WhatsApp)
+- **Autentificare**: [laragear/webauthn](https://github.com/Laragear/WebAuthn) (WebAuthn / Passkeys), [pragmarx/google2fa](https://github.com/antonioribeiro/google2fa) (2FA TOTP)
 - **QR**: simplesoftwareio/simple-qrcode
 - **Teste**: PHPUnit
 
@@ -100,20 +100,6 @@ DB_PASSWORD=
 # DB_CONNECTION=sqlite
 # DB_DATABASE=/cale/absoluta/catre/database/database.sqlite
 
-# --- WhatsApp / 2FA (Meta WhatsApp Cloud API) ---
-SMS_PROVIDER=meta         # "meta" sau "log" (dezvoltare)
-WHATSAPP_TOKEN=
-WHATSAPP_PHONE_NUMBER_ID=
-WHATSAPP_TEMPLATE_NAME=
-WHATSAPP_TEMPLATE_LANGUAGE=ro
-WHATSAPP_API_VERSION=v21.0
-
-# Parametri codului de verificare
-SMS_CODE_LENGTH=6
-SMS_CODE_EXPIRES_MINUTES=10
-SMS_CODE_MAX_ATTEMPTS=5
-SMS_CODE_THROTTLE_SECONDS=60
-
 # --- WebAuthn / Passkeys ---
 WEBAUTHN_NAME="Vecini"
 WEBAUTHN_ID=localhost     # domeniul pe care rulează aplicația
@@ -148,28 +134,17 @@ Migrațiile creează toate tabelele (utilizatori, clădiri, scări, etaje, apart
 
 ---
 
-## Configurarea serviciului WhatsApp (2FA)
+## Autentificarea în doi pași (TOTP)
 
-Aplicația trimite codurile de verificare prin **WhatsApp** (Meta WhatsApp Cloud API).
+Autentificarea în doi pași folosește **TOTP** (Time-based One-Time Password) cu aplicații de autentificare precum **Google Authenticator**, **Authy** sau **Microsoft Authenticator**. Este gratuit, nu necesită niciun serviciu extern și funcționează offline.
 
-1. Creează un cont pe [Meta for Developers](https://developers.facebook.com/) și o aplicație.
-2. Adaugă produsul **WhatsApp** și configurează un număr de telefon (WhatsApp Business).
-3. Obține:
-   - `WHATSAPP_TOKEN` — token de acces permanent (System User / token).
-   - `WHATSAPP_PHONE_NUMBER_ID` — ID-ul numărului de telefon.
-4. Creează un șablon de mesaj (tip „Transactional") în **Meta Business Manager → WhatsApp Manager → Message templates**, cu conținutul: `Codul tău de verificare Vecini este: {{1}}` (sau doar `{{1}}`).
-5. Completează în `.env`:
-   ```dotenv
-   SMS_PROVIDER=meta
-   WHATSAPP_TOKEN=...
-   WHATSAPP_PHONE_NUMBER_ID=...
-   WHATSAPP_TEMPLATE_NAME=...   # numele șablonului
-   WHATSAPP_TEMPLATE_LANGUAGE=ro
-   ```
+Configurare:
 
-Pentru dezvoltare, `SMS_PROVIDER=log` scrie codul de verificare în log-ul Laravel (`storage/logs/laravel.log`) în loc să trimită mesajul WhatsApp real.
+1. În **Profil → Securitate → Autentificare în doi pași**, apasă **Configurează**.
+2. Scanează codul QR cu aplicația de autentificare (sau introdu manual cheia secretă).
+3. Introdu codul de 6 cifre afișat de aplicație pentru a confirma activarea.
 
-Codul de verificare: expiră, are limită de încercări, rate limiting și nu poate fi reutilizat (vezi `app/Services/TwoFactorService.php`).
+Codul este verificat local (RFC 6238) prin pachetul `pragmarx/google2fa` (vezi `app/Services/TwoFactorService.php`).
 
 ---
 
@@ -235,7 +210,7 @@ După rularea `php artisan migrate:fresh --seed`, sunt disponibile:
 |---------------|------------------|-----------|
 | Administrator | `admin@vecini.ro` | `password` |
 
-> Fiecare locatar își poate seta, schimba sau elimina numărul de telefon pentru 2FA din **Profil → Securitate** (schimbarea necesită confirmare prin WhatsApp pe noul număr și parola contului). În dezvoltare (`SMS_PROVIDER=log`), codul de verificare este scris în `storage/logs/laravel.log`.
+> Fiecare locatar își poate activa sau dezactiva autentificarea în doi pași (TOTP, prin aplicație de autentificare) din **Profil → Securitate**.
 
 Locatarii demo au emailuri de forma `nume@vecini.ro` (ex. `andrei@vecini.ro`) și parola `password`.
 
@@ -260,7 +235,7 @@ Variante de hosting recomandate: **Laravel Forge**, **Laravel Cloud**, un **VPS*
 Pași generali:
 
 1. Clonează repository-ul pe server și `composer install --no-dev --optimize-autoloader`.
-2. Configurează `.env` (cheie, MySQL, WhatsApp, WebAuthn, mail).
+2. Configurează `.env` (cheie, MySQL, WebAuthn, mail).
 3. `php artisan key:generate` și `php artisan migrate --force --seed`.
 4. `php artisan storage:link`.
 5. `npm ci && npm run build`.

@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use App\Services\TwoFactorService;
+use PragmaRX\Google2FA\Google2FA;
 use Tests\Concerns\CreatesBuildingStructure;
 use Tests\TestCase;
 
@@ -11,75 +11,57 @@ class SecurityTest extends TestCase
 {
     use CreatesBuildingStructure;
 
-    public function test_change_phone_sends_code_and_stores_pending_number(): void
+    public function test_setup_generates_pending_secret(): void
     {
-        $user = User::factory()->create(['phone' => '0711111111']);
+        $user = User::factory()->create();
 
-        $this->actingAs($user)->post('/setari/securitate/telefon', [
-            'new_phone' => '0767965218',
-            'current_password' => 'password',
-        ])->assertSessionHas('auth.pending_phone', '0767965218');
+        $this->actingAs($user)->post('/setari/securitate/2fa/setup')->assertRedirect();
 
-        $this->assertDatabaseHas('two_factor_challenges', ['user_id' => $user->id]);
+        $this->assertNotNull(session('auth.two_factor_pending_secret'));
     }
 
-    public function test_verify_phone_change_updates_number(): void
+    public function test_confirm_enables_two_factor(): void
     {
-        $user = User::factory()->create(['phone' => '0711111111']);
-        $code = app(TwoFactorService::class)->sendCode($user, '0767965218');
+        $user = User::factory()->create();
+        $secret = (new Google2FA)->generateSecretKey();
+        $code = (new Google2FA)->getCurrentOtp($secret);
 
         $this->actingAs($user)
-            ->withSession(['auth.pending_phone' => '0767965218'])
-            ->post('/setari/securitate/telefon/verifica', [
-                'code' => $code,
-            ])
+            ->withSession(['auth.two_factor_pending_secret' => $secret])
+            ->post('/setari/securitate/2fa/confirm', ['code' => $code])
             ->assertRedirect();
-
-        $this->assertDatabaseHas('users', ['id' => $user->id, 'phone' => '0767965218']);
-    }
-
-    public function test_change_phone_requires_correct_password(): void
-    {
-        $user = User::factory()->create(['phone' => '0711111111']);
-
-        $this->actingAs($user)->post('/setari/securitate/telefon', [
-            'new_phone' => '0767965218',
-            'current_password' => 'wrong-password',
-        ])->assertSessionHasErrors('current_password');
-    }
-
-    public function test_resend_phone_code_sends_a_new_code_after_throttle(): void
-    {
-        $user = User::factory()->create(['phone' => '0711111111']);
-        $service = app(TwoFactorService::class);
-
-        $service->sendCode($user, '0767965218');
-        $this->assertDatabaseCount('two_factor_challenges', 1);
-
-        $this->travel(31)->seconds();
-
-        $this->actingAs($user)
-            ->withSession(['auth.pending_phone' => '0767965218'])
-            ->post('/setari/securitate/telefon/retrimite')
-            ->assertRedirect();
-
-        $this->assertDatabaseCount('two_factor_challenges', 2);
-    }
-
-    public function test_remove_phone_clears_number_and_disables_2fa(): void
-    {
-        $user = User::factory()->create([
-            'phone' => '0767965218',
-            'phone_verified_at' => now(),
-            'two_factor_enabled' => true,
-        ]);
-
-        $this->actingAs($user)->post('/setari/securitate/telefon/sterge')->assertRedirect();
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
-            'phone' => null,
+            'two_factor_enabled' => true,
+            'two_factor_secret' => $secret,
+        ]);
+    }
+
+    public function test_confirm_with_invalid_code_fails(): void
+    {
+        $user = User::factory()->create();
+        $secret = (new Google2FA)->generateSecretKey();
+
+        $this->actingAs($user)
+            ->withSession(['auth.two_factor_pending_secret' => $secret])
+            ->post('/setari/securitate/2fa/confirm', ['code' => '000000'])
+            ->assertSessionHasErrors('code');
+    }
+
+    public function test_disable_clears_two_factor(): void
+    {
+        $user = User::factory()->create([
+            'two_factor_enabled' => true,
+            'two_factor_secret' => 'ABCDEFGHIJKLMNOP',
+        ]);
+
+        $this->actingAs($user)->post('/setari/securitate/2fa/disable')->assertRedirect();
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
             'two_factor_enabled' => false,
+            'two_factor_secret' => null,
         ]);
     }
 }

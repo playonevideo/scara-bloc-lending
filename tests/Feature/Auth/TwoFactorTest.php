@@ -2,9 +2,8 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\TwoFactorChallenge;
 use App\Models\User;
-use App\Services\TwoFactorService;
+use PragmaRX\Google2FA\Google2FA;
 use Tests\Concerns\CreatesBuildingStructure;
 use Tests\TestCase;
 
@@ -16,15 +15,13 @@ class TwoFactorTest extends TestCase
     {
         $user = User::factory()->create([
             'two_factor_enabled' => true,
-            'phone' => '+40712345678',
+            'two_factor_secret' => 'ABCDEFGHIJKLMNOP',
         ]);
 
         $this->post('/login', [
             'email' => $user->email,
             'password' => 'password',
         ])->assertRedirect(route('two-factor.challenge'));
-
-        $this->assertDatabaseHas('two_factor_challenges', ['user_id' => $user->id]);
     }
 
     public function test_challenge_page_requires_pending_login(): void
@@ -32,32 +29,41 @@ class TwoFactorTest extends TestCase
         $this->get('/two-factor/challenge')->assertRedirect(route('login'));
     }
 
-    public function test_code_cannot_be_reused(): void
+    public function test_verify_with_valid_code_logs_in(): void
     {
+        $secret = (new Google2FA)->generateSecretKey();
         $user = User::factory()->create([
             'two_factor_enabled' => true,
-            'phone' => '+40712345678',
+            'two_factor_secret' => $secret,
         ]);
+        $code = (new Google2FA)->getCurrentOtp($secret);
 
-        $service = app(TwoFactorService::class);
-        $code = $service->sendCode($user);
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ])->assertRedirect(route('two-factor.challenge'));
 
-        $this->assertTrue($service->verify($user, $code));
-        $this->assertFalse($service->verify($user, $code));
+        $this->post('/two-factor/challenge', ['code' => $code])
+            ->assertRedirect(route('dashboard'));
+
+        $this->assertAuthenticatedAs($user);
     }
 
-    public function test_code_expires(): void
+    public function test_verify_with_invalid_code_fails(): void
     {
         $user = User::factory()->create([
             'two_factor_enabled' => true,
-            'phone' => '+40712345678',
+            'two_factor_secret' => 'ABCDEFGHIJKLMNOP',
         ]);
 
-        $service = app(TwoFactorService::class);
-        $code = $service->sendCode($user);
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
 
-        TwoFactorChallenge::query()->update(['expires_at' => now()->subMinute()]);
+        $this->post('/two-factor/challenge', ['code' => '000000'])
+            ->assertSessionHasErrors('code');
 
-        $this->assertFalse($service->verify($user, $code));
+        $this->assertGuest();
     }
 }
