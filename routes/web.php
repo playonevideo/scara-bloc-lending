@@ -69,7 +69,9 @@ Route::prefix('webauthn')->group(function () {
 */
 Route::middleware(['auth', 'active'])->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+});
 
+Route::middleware(['auth', 'active', 'resident'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Marketplace

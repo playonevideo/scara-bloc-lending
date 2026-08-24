@@ -43,7 +43,7 @@ class ReportController extends Controller
         ]);
 
         User::query()
-            ->whereIn('role', [Role::Admin->value, Role::SuperAdmin->value])
+            ->where('role', Role::Admin->value)
             ->get()
             ->each(fn (User $admin) => $admin->notify(new ObjectReported($report)));
 

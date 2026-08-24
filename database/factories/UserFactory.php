@@ -34,11 +34,6 @@ class UserFactory extends Factory
         return $this->state(fn () => ['role' => Role::Admin]);
     }
 
-    public function superAdmin(): static
-    {
-        return $this->state(fn () => ['role' => Role::SuperAdmin]);
-    }
-
     public function blocked(): static
     {
         return $this->state(fn () => ['is_blocked' => true, 'blocked_at' => now()]);

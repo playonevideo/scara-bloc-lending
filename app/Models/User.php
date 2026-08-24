@@ -115,11 +115,6 @@ class User extends Authenticatable implements FilamentUser, WebAuthnAuthenticata
         return Uuid::uuid5(Uuid::NAMESPACE_OID, 'user-'.$this->getKey());
     }
 
-    public function isSuperAdmin(): bool
-    {
-        return $this->role === Role::SuperAdmin;
-    }
-
     public function isBlocked(): bool
     {
         return $this->is_blocked;

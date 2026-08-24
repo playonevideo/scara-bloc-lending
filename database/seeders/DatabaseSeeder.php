@@ -39,16 +39,10 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        $superAdmin = User::factory()->superAdmin()->create([
-            'name' => 'Administrator General',
+        User::factory()->admin()->create([
+            'name' => 'Administrator',
             'email' => 'admin@vecini.ro',
             'phone' => '+40700000001',
-        ]);
-
-        User::factory()->admin()->create([
-            'name' => 'Administrator Scară',
-            'email' => 'admin2@vecini.ro',
-            'phone' => '+40700000002',
         ]);
 
         $residents = collect();
