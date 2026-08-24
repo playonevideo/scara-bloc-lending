@@ -39,7 +39,7 @@ class TwoFactorService
             'expires_at' => now()->addMinutes((int) config('sms.code.expires_minutes', 10)),
         ]);
 
-        $this->sms->send($to, "Codul tău de verificare Vecini este: {$code}");
+        $this->sms->send($to, "Codul tău de verificare Vecini este: {$code}", ['1' => $code]);
 
         // In development (log driver) the code is not delivered as a real message,
         // so surface it in the UI via the session flash data.

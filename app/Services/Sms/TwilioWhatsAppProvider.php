@@ -13,9 +13,10 @@ class TwilioWhatsAppProvider implements SmsProvider
         private readonly string $from,
         private readonly ?string $accountSid = null,
         private readonly bool $verifySsl = true,
+        private readonly ?string $contentSid = null,
     ) {}
 
-    public function send(string $to, string $message): void
+    public function send(string $to, string $message, array $variables = []): void
     {
         // Twilio API Keys (SK...) require the Account SID as the third argument,
         // whereas Account SID + Auth Token auth only needs the first two.
@@ -27,10 +28,20 @@ class TwilioWhatsAppProvider implements SmsProvider
             $this->httpClient(),
         );
 
-        $client->messages->create('whatsapp:'.$this->normalize($to), [
+        $params = [
             'from' => 'whatsapp:'.$this->from,
-            'body' => $message,
-        ]);
+        ];
+
+        // WhatsApp Business requires pre-approved templates (Content SID) for
+        // outbound messages. The sandbox accepts free-form "body" messages.
+        if ($this->contentSid) {
+            $params['contentSid'] = $this->contentSid;
+            $params['contentVariables'] = json_encode($variables);
+        } else {
+            $params['body'] = $message;
+        }
+
+        $client->messages->create('whatsapp:'.$this->normalize($to), $params);
     }
 
     /**

@@ -21,14 +21,15 @@ class SmsManager
                 (string) config('services.twilio.from'),
                 (string) config('services.twilio.account_sid') ?: null,
                 filter_var(config('services.twilio.verify_ssl', true), FILTER_VALIDATE_BOOLEAN),
+                (string) config('services.twilio.content_sid') ?: null,
             ),
             'log' => new LogSmsProvider,
             default => throw new RuntimeException('Unknown SMS provider: '.config('sms.provider')),
         };
     }
 
-    public function send(string $to, string $message): void
+    public function send(string $to, string $message, array $variables = []): void
     {
-        $this->provider()->send($to, $message);
+        $this->provider()->send($to, $message, $variables);
     }
 }
