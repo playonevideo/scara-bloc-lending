@@ -57,6 +57,16 @@ function serializeCredentials(credentials) {
 }
 
 async function registerPasskey() {
+    if (typeof PublicKeyCredential === 'undefined') {
+        alert('Dispozitivul tău nu suportă passkey-uri.');
+        return;
+    }
+
+    if (!window.isSecureContext) {
+        alert('Passkey-urile necesită un context securizat. Accesează aplicația prin http://localhost:8000 (nu 127.0.0.1).');
+        return;
+    }
+
     try {
         const optionsResponse = await fetch('/webauthn/register/options', {
             method: 'POST',
@@ -89,6 +99,16 @@ async function registerPasskey() {
 }
 
 async function loginWithPasskey() {
+    if (typeof PublicKeyCredential === 'undefined') {
+        alert('Dispozitivul tău nu suportă passkey-uri.');
+        return;
+    }
+
+    if (!window.isSecureContext) {
+        alert('Passkey-urile necesită un context securizat. Accesează aplicația prin http://localhost:8000 (nu 127.0.0.1).');
+        return;
+    }
+
     try {
         const optionsResponse = await fetch('/webauthn/login/options', {
             method: 'POST',
