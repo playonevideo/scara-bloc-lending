@@ -14,7 +14,16 @@
                     </span>
 
                     <div class="flex-1">
-                        <h1 class="text-2xl font-bold text-gray-900">{{ $resident->name }}</h1>
+                        <h1 class="flex flex-wrap items-center gap-2 text-2xl font-bold text-gray-900">
+                            {{ $resident->name }}
+                            @if ($resident->isOnline())
+                                <span class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
+                                    <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span> Online
+                                </span>
+                            @elseif ($resident->lastActiveLabel())
+                                <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">{{ $resident->lastActiveLabel() }}</span>
+                            @endif
+                        </h1>
                         <p class="mt-1 text-sm text-gray-500">{{ $resident->locationLabel() }}</p>
 
                         @if ($averageRating)

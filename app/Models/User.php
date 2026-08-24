@@ -102,6 +102,26 @@ class User extends Authenticatable implements FilamentUser, WebAuthnAuthenticata
         return $this->hasMany(Favorite::class);
     }
 
+    public function blocks(): HasMany
+    {
+        return $this->hasMany(Block::class, 'blocker_id');
+    }
+
+    public function blockedBy(): HasMany
+    {
+        return $this->hasMany(Block::class, 'blocked_id');
+    }
+
+    public function isBlocking(User $user): bool
+    {
+        return $this->blocks()->where('blocked_id', $user->id)->exists();
+    }
+
+    public function isBlockedBy(User $user): bool
+    {
+        return $this->blockedBy()->where('blocker_id', $user->id)->exists();
+    }
+
     public function isAdmin(): bool
     {
         return $this->role->isAdmin();
@@ -150,5 +170,42 @@ class User extends Authenticatable implements FilamentUser, WebAuthnAuthenticata
         return $this->reviewsReceived()
             ->selectRaw('AVG(rating) as aggregate')
             ->value('aggregate');
+    }
+
+    /**
+     * Whether the user is currently online (active in the last 5 minutes).
+     */
+    public function isOnline(): bool
+    {
+        return $this->last_seen_at && $this->last_seen_at->diffInMinutes(now()) < 5;
+    }
+
+    /**
+     * A short "last active" label, or null when the user has been inactive
+     * for more than 3 hours (in which case nothing is shown).
+     */
+    public function lastActiveLabel(): ?string
+    {
+        if (! $this->last_seen_at) {
+            return null;
+        }
+
+        if ($this->isOnline()) {
+            return 'Online';
+        }
+
+        $minutes = $this->last_seen_at->diffInMinutes(now());
+
+        if ($minutes < 60) {
+            return 'Activ acum '.$minutes.' min';
+        }
+
+        $hours = $this->last_seen_at->diffInHours(now());
+
+        if ($hours <= 3) {
+            return 'Activ acum '.$hours.' h';
+        }
+
+        return null;
     }
 }
