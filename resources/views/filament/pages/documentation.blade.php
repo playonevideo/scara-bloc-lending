@@ -15,7 +15,7 @@
 
     {{-- 1. Elemente generale --}}
     <details class="doc rounded-xl border border-gray-200 bg-white" open>
-        <summary class="flex items-center justify-between bg-black px-4 py-3 font-semibold text-white">
+        <summary style="background-color: #000000; color: #ffffff;" class="flex items-center justify-between px-4 py-3 font-semibold">
             <span>Elemente generale ale interfeței</span>
             <svg class="chev h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
         </summary>
@@ -33,7 +33,7 @@
 
     {{-- 2. Dashboard --}}
     <details class="doc overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <summary class="flex items-center justify-between bg-black px-4 py-3 font-semibold text-white">
+        <summary style="background-color: #000000; color: #ffffff;" class="flex items-center justify-between px-4 py-3 font-semibold">
             <span>Dashboard</span>
             <svg class="chev h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
         </summary>
@@ -46,14 +46,14 @@
 
     {{-- 3. Comunitate --}}
     <details class="doc overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <summary class="flex items-center justify-between bg-black px-4 py-3 font-semibold text-white">
+        <summary style="background-color: #000000; color: #ffffff;" class="flex items-center justify-between px-4 py-3 font-semibold">
             <span>Grup „Comunitate"</span>
             <svg class="chev h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
         </summary>
         <div class="space-y-3 border-t border-gray-100 px-4 py-3">
 
             <details class="doc-sub overflow-hidden rounded-lg bg-gray-50">
-                <summary class="flex items-center justify-between bg-gray-900 px-3 py-2 font-medium text-white">
+                <summary style="background-color: #111827; color: #ffffff;" class="flex items-center justify-between px-3 py-2 font-medium">
                     <span>Locatari (Users)</span>
                     <span class="text-xs text-gray-400">▾</span>
                 </summary>
@@ -81,7 +81,7 @@
             </details>
 
             <details class="doc-sub overflow-hidden rounded-lg bg-gray-50">
-                <summary class="flex items-center justify-between bg-gray-900 px-3 py-2 font-medium text-white">
+                <summary style="background-color: #111827; color: #ffffff;" class="flex items-center justify-between px-3 py-2 font-medium">
                     <span>Categorii (Categories)</span>
                     <span class="text-xs text-gray-400">▾</span>
                 </summary>
@@ -97,7 +97,7 @@
             </details>
 
             <details class="doc-sub overflow-hidden rounded-lg bg-gray-50">
-                <summary class="flex items-center justify-between bg-gray-900 px-3 py-2 font-medium text-white">
+                <summary style="background-color: #111827; color: #ffffff;" class="flex items-center justify-between px-3 py-2 font-medium">
                     <span>Anunțuri (Announcements)</span>
                     <span class="text-xs text-gray-400">▾</span>
                 </summary>
@@ -112,7 +112,7 @@
             </details>
 
             <details class="doc-sub overflow-hidden rounded-lg bg-gray-50">
-                <summary class="flex items-center justify-between bg-gray-900 px-3 py-2 font-medium text-white">
+                <summary style="background-color: #111827; color: #ffffff;" class="flex items-center justify-between px-3 py-2 font-medium">
                     <span>Cereri comunitate (Community Requests)</span>
                     <span class="text-xs text-gray-400">▾</span>
                 </summary>
@@ -122,7 +122,7 @@
             </details>
 
             <details class="doc-sub overflow-hidden rounded-lg bg-gray-50">
-                <summary class="flex items-center justify-between bg-gray-900 px-3 py-2 font-medium text-white">
+                <summary style="background-color: #111827; color: #ffffff;" class="flex items-center justify-between px-3 py-2 font-medium">
                     <span>Invitații (Invitations)</span>
                     <span class="text-xs text-gray-400">▾</span>
                 </summary>
@@ -148,7 +148,7 @@
 
     {{-- 4. Clădire --}}
     <details class="doc overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <summary class="flex items-center justify-between bg-black px-4 py-3 font-semibold text-white">
+        <summary style="background-color: #000000; color: #ffffff;" class="flex items-center justify-between px-4 py-3 font-semibold">
             <span>Grup „Clădire"</span>
             <svg class="chev h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
         </summary>
@@ -166,7 +166,7 @@
 
     {{-- 5. Marketplace --}}
     <details class="doc overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <summary class="flex items-center justify-between bg-black px-4 py-3 font-semibold text-white">
+        <summary style="background-color: #000000; color: #ffffff;" class="flex items-center justify-between px-4 py-3 font-semibold">
             <span>Grup „Marketplace" — Obiecte (Items)</span>
             <svg class="chev h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
         </summary>
@@ -196,7 +196,7 @@
 
     {{-- 6. Împrumuturi --}}
     <details class="doc overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <summary class="flex items-center justify-between bg-black px-4 py-3 font-semibold text-white">
+        <summary style="background-color: #000000; color: #ffffff;" class="flex items-center justify-between px-4 py-3 font-semibold">
             <span>Grup „Împrumuturi"</span>
             <svg class="chev h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
         </summary>
@@ -219,7 +219,7 @@
 
     {{-- 7. Comunicare --}}
     <details class="doc overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <summary class="flex items-center justify-between bg-black px-4 py-3 font-semibold text-white">
+        <summary style="background-color: #000000; color: #ffffff;" class="flex items-center justify-between px-4 py-3 font-semibold">
             <span>Grup „Comunicare"</span>
             <svg class="chev h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
         </summary>
@@ -231,7 +231,7 @@
 
     {{-- 8. Moderare --}}
     <details class="doc overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <summary class="flex items-center justify-between bg-black px-4 py-3 font-semibold text-white">
+        <summary style="background-color: #000000; color: #ffffff;" class="flex items-center justify-between px-4 py-3 font-semibold">
             <span>Grup „Moderare" — Raportări (Reports)</span>
             <svg class="chev h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
         </summary>
@@ -255,7 +255,7 @@
 
     {{-- 9. Sistem --}}
     <details class="doc overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <summary class="flex items-center justify-between bg-black px-4 py-3 font-semibold text-white">
+        <summary style="background-color: #000000; color: #ffffff;" class="flex items-center justify-between px-4 py-3 font-semibold">
             <span>Grup „Sistem" — Jurnal de audit (Audit Logs)</span>
             <svg class="chev h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
         </summary>
