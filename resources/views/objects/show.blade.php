@@ -104,6 +104,30 @@
                     @endif
                 </div>
 
+                @if ($object->owner_id !== auth()->id())
+                    <details class="mt-6 rounded-2xl border border-gray-100 bg-gray-50/50 p-4">
+                        <summary class="cursor-pointer text-sm font-medium text-gray-500 hover:text-gray-700">Raportează acest obiect</summary>
+                        <form method="POST" action="{{ route('reports.store') }}" class="mt-3 space-y-3">
+                            @csrf
+                            <input type="hidden" name="reportable_type" value="object">
+                            <input type="hidden" name="reportable_id" value="{{ $object->id }}">
+                            <div>
+                                <label for="reason" class="block text-sm font-medium text-gray-700">Motiv</label>
+                                <select id="reason" name="reason" required class="mt-1 block w-full rounded-xl border-gray-300 focus:border-brand-500 focus:ring-brand-500">
+                                    @foreach (\App\Enums\ReportReason::options() as $value => $label)
+                                        <option value="{{ $value }}">{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label for="details" class="block text-sm font-medium text-gray-700">Detalii (opțional)</label>
+                                <textarea id="details" name="details" rows="2" class="mt-1 block w-full rounded-xl border-gray-300 focus:border-brand-500 focus:ring-brand-500"></textarea>
+                            </div>
+                            <button type="submit" class="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Trimite raportarea</button>
+                        </form>
+                    </details>
+                @endif
+
                 @if ($canRequest)
                     <div id="loan-form" class="mt-6 hidden rounded-2xl border border-brand-100 bg-brand-50/50 p-5">
                         <h2 class="font-semibold text-gray-900">Solicită împrumutul</h2>
