@@ -8,8 +8,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | The driver used to deliver one-time codes for two-factor authentication.
-    | Supported values: "meta" (WhatsApp Cloud API), "twilio" (WhatsApp via
-    | Twilio) and "log" (development only — writes the code to the Laravel log).
+    | Supported values: "meta" (WhatsApp Cloud API) and "log" (development
+    | only — writes the code to the Laravel log).
     |
     */
 

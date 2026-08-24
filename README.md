@@ -32,7 +32,7 @@ Scopul este încurajarea colaborării între vecini, reducerea cumpărării inut
 - **ORM**: Eloquent
 - **Admin**: Filament 3 (Resources, Tables, Forms, Actions, Notifications, Widgets)
 - **Frontend locatar**: Blade + Livewire 3 + Alpine.js + Tailwind CSS 4
-- **Autentificare**: [laragear/webauthn](https://github.com/Laragear/WebAuthn) (WebAuthn / Passkeys), [Twilio SDK](https://www.twilio.com/) (2FA prin WhatsApp)
+- **Autentificare**: [laragear/webauthn](https://github.com/Laragear/WebAuthn) (WebAuthn / Passkeys), Meta WhatsApp Cloud API (2FA prin WhatsApp)
 - **QR**: simplesoftwareio/simple-qrcode
 - **Teste**: PHPUnit
 
@@ -100,12 +100,13 @@ DB_PASSWORD=
 # DB_CONNECTION=sqlite
 # DB_DATABASE=/cale/absoluta/catre/database/database.sqlite
 
-# --- WhatsApp / 2FA (Twilio) ---
-SMS_PROVIDER=twilio      # "twilio" sau "log" (dezvoltare)
-TWILIO_SID=
-TWILIO_TOKEN=
-TWILIO_ACCOUNT_SID=
-TWILIO_FROM=+14155238886 # numărul de trimitere WhatsApp (sandbox sau WhatsApp Business)
+# --- WhatsApp / 2FA (Meta WhatsApp Cloud API) ---
+SMS_PROVIDER=meta         # "meta" sau "log" (dezvoltare)
+WHATSAPP_TOKEN=
+WHATSAPP_PHONE_NUMBER_ID=
+WHATSAPP_TEMPLATE_NAME=
+WHATSAPP_TEMPLATE_LANGUAGE=ro
+WHATSAPP_API_VERSION=v21.0
 
 # Parametri codului de verificare
 SMS_CODE_LENGTH=6
@@ -149,9 +150,7 @@ Migrațiile creează toate tabelele (utilizatori, clădiri, scări, etaje, apart
 
 ## Configurarea serviciului WhatsApp (2FA)
 
-Aplicația trimite codurile de verificare prin WhatsApp. Poți alege între două provider-e (via `SMS_PROVIDER`):
-
-### Meta WhatsApp Cloud API (recomandat, gratuit)
+Aplicația trimite codurile de verificare prin **WhatsApp** (Meta WhatsApp Cloud API).
 
 1. Creează un cont pe [Meta for Developers](https://developers.facebook.com/) și o aplicație.
 2. Adaugă produsul **WhatsApp** și configurează un număr de telefon (WhatsApp Business).
@@ -167,12 +166,6 @@ Aplicația trimite codurile de verificare prin WhatsApp. Poți alege între dou�
    WHATSAPP_TEMPLATE_NAME=...   # numele șablonului
    WHATSAPP_TEMPLATE_LANGUAGE=ro
    ```
-
-### Twilio WhatsApp (alternativă)
-
-1. Obține `Account SID` și `Auth Token` (sau un API Key `SK...` + secret) din [Twilio](https://www.twilio.com/).
-2. Configurează un număr de trimitere WhatsApp (sandbox `+14155238886` sau WhatsApp Business) și un Content Template (SID `HX...`).
-3. Completează în `.env`: `SMS_PROVIDER=twilio`, `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_ACCOUNT_SID`, `TWILIO_FROM`, `TWILIO_CONTENT_SID`.
 
 Pentru dezvoltare, `SMS_PROVIDER=log` scrie codul de verificare în log-ul Laravel (`storage/logs/laravel.log`) în loc să trimită mesajul WhatsApp real.
 
@@ -267,7 +260,7 @@ Variante de hosting recomandate: **Laravel Forge**, **Laravel Cloud**, un **VPS*
 Pași generali:
 
 1. Clonează repository-ul pe server și `composer install --no-dev --optimize-autoloader`.
-2. Configurează `.env` (cheie, MySQL, WhatsApp/Twilio, WebAuthn, mail).
+2. Configurează `.env` (cheie, MySQL, WhatsApp, WebAuthn, mail).
 3. `php artisan key:generate` și `php artisan migrate --force --seed`.
 4. `php artisan storage:link`.
 5. `npm ci && npm run build`.
