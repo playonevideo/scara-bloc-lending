@@ -14,12 +14,20 @@
 
             <div class="p-6 sm:p-8">
                 <div class="flex flex-wrap items-center gap-2">
-                    <span class="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">{{ $object->category?->name ?? 'Diverse' }}</span>
-                    @if ($object->isAvailable())
-                        <span class="rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700">Disponibil</span>
-                    @else
-                        <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">{{ $object->status->label() }}</span>
+                    @if ($object->category)
+                        <a href="{{ route('objects.index', ['category' => $object->category_id]) }}"
+                            class="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700 transition hover:bg-brand-100"
+                            title="Vezi toate obiectele din această categorie">{{ $object->category->name }}</a>
                     @endif
+
+                    <a href="{{ route('objects.index', ['status' => $object->status->value]) }}"
+                        @class([
+                            'rounded-full px-3 py-1 text-xs font-medium transition',
+                            'bg-green-50 text-green-700 hover:bg-green-100' => $object->isAvailable(),
+                            'bg-gray-100 text-gray-600 hover:bg-gray-200' => ! $object->isAvailable(),
+                        ])
+                        title="Vezi obiectele cu acest statut">{{ $object->status->label() }}</a>
+
                     <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">{{ $object->condition->label() }}</span>
                 </div>
 
@@ -29,7 +37,9 @@
                     <span class="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700">
                         {{ strtoupper(mb_substr($object->owner->name, 0, 1)) }}
                     </span>
-                    <span>{{ $object->owner->name }}</span>
+                    <a href="{{ route('objects.index', ['owner' => $object->owner_id]) }}"
+                        class="font-medium text-gray-700 transition hover:text-brand-600 hover:underline"
+                        title="Vezi toate obiectele acestui vecin">{{ $object->owner->name }}</a>
                     <span>·</span>
                     <span>{{ $object->owner->locationLabel() }}</span>
                 </div>
