@@ -37,9 +37,9 @@
                     <span class="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700">
                         {{ strtoupper(mb_substr($object->owner->name, 0, 1)) }}
                     </span>
-                    <a href="{{ route('objects.index', ['owner' => $object->owner_id]) }}"
+                    <a href="{{ route('residents.show', $object->owner) }}"
                         class="font-medium text-gray-700 transition hover:text-brand-600 hover:underline"
-                        title="Vezi toate obiectele acestui vecin">{{ $object->owner->name }}</a>
+                        title="Vezi profilul acestui vecin">{{ $object->owner->name }}</a>
                     <span>·</span>
                     <span>{{ $object->owner->locationLabel() }}</span>
                 </div>

@@ -15,6 +15,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ObjectController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ResidentProfileController;
 use App\Http\Controllers\SecurityController;
 use App\Http\Controllers\WebAuthn\WebAuthnLoginController;
 use App\Http\Controllers\WebAuthn\WebAuthnRegisterController;
@@ -84,6 +85,9 @@ Route::middleware(['auth', 'active', 'resident'])->group(function () {
     Route::put('/obiecte/{object}', [ObjectController::class, 'update'])->name('objects.update');
     Route::delete('/obiecte/{object}', [ObjectController::class, 'destroy'])->name('objects.destroy');
     Route::post('/obiecte/{object}/favorite', [ObjectController::class, 'toggleFavorite'])->name('objects.favorite');
+
+    // Resident profiles
+    Route::get('/vecini/{resident}', [ResidentProfileController::class, 'show'])->name('residents.show');
 
     // Loans
     Route::get('/imprumuturi', [LoanController::class, 'index'])->name('loans.index');
