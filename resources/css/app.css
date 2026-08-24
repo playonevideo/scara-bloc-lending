@@ -26,3 +26,13 @@
 [x-cloak] {
     display: none !important;
 }
+
+.msg-sidebar {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .msg-sidebar {
+        width: var(--sidebar-w, 280px);
+    }
+}

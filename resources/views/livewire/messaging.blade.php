@@ -1,10 +1,3 @@
-<style>
-    .msg-sidebar { width: 100%; }
-    @media (min-width: 768px) {
-        .msg-sidebar { width: var(--sidebar-w, 280px); }
-    }
-</style>
-
 <div x-data="{ sidebarWidth: 280, dragging: false }"
     x-on:mousemove.window="if (dragging) sidebarWidth = Math.min(560, Math.max(220, $event.clientX))"
     x-on:mouseup.window="dragging = false"
