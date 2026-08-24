@@ -18,7 +18,7 @@ class DashboardController extends Controller
         $availableObjects = Item::query()
             ->published()
             ->available()
-            ->with(['category', 'coverImage'])
+            ->with(['category', 'images'])
             ->latest()
             ->limit(6)
             ->get();
