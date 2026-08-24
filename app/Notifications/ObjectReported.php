@@ -7,9 +7,7 @@ use Illuminate\Notifications\Notification;
 
 class ObjectReported extends Notification
 {
-    public function __construct(public Report $report)
-    {
-    }
+    public function __construct(public Report $report) {}
 
     public function via(object $notifiable): array
     {

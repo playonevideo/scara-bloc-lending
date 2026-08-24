@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Floor;
 use App\Models\Staircase;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Floor>
+ * @extends Factory<Floor>
  */
 class FloorFactory extends Factory
 {

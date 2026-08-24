@@ -2,6 +2,18 @@
 
 namespace App\Providers;
 
+use App\Models\Announcement;
+use App\Models\Apartment;
+use App\Models\Building;
+use App\Models\Category;
+use App\Models\Floor;
+use App\Models\Item;
+use App\Models\Loan;
+use App\Models\Message;
+use App\Models\Report;
+use App\Models\Staircase;
+use App\Models\User;
+use App\Observers\AuditingObserver;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -22,21 +34,21 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Relation::morphMap([
-            'object' => \App\Models\Item::class,
-            'message' => \App\Models\Message::class,
-            'user' => \App\Models\User::class,
+            'object' => Item::class,
+            'message' => Message::class,
+            'user' => User::class,
         ]);
 
-        \App\Models\User::observe(\App\Observers\AuditingObserver::class);
-        \App\Models\Item::observe(\App\Observers\AuditingObserver::class);
-        \App\Models\Loan::observe(\App\Observers\AuditingObserver::class);
-        \App\Models\Apartment::observe(\App\Observers\AuditingObserver::class);
-        \App\Models\Building::observe(\App\Observers\AuditingObserver::class);
-        \App\Models\Staircase::observe(\App\Observers\AuditingObserver::class);
-        \App\Models\Floor::observe(\App\Observers\AuditingObserver::class);
-        \App\Models\Category::observe(\App\Observers\AuditingObserver::class);
-        \App\Models\Report::observe(\App\Observers\AuditingObserver::class);
-        \App\Models\Announcement::observe(\App\Observers\AuditingObserver::class);
+        User::observe(AuditingObserver::class);
+        Item::observe(AuditingObserver::class);
+        Loan::observe(AuditingObserver::class);
+        Apartment::observe(AuditingObserver::class);
+        Building::observe(AuditingObserver::class);
+        Staircase::observe(AuditingObserver::class);
+        Floor::observe(AuditingObserver::class);
+        Category::observe(AuditingObserver::class);
+        Report::observe(AuditingObserver::class);
+        Announcement::observe(AuditingObserver::class);
 
         Gate::before(function ($user, $ability) {
             if ($user?->isSuperAdmin()) {

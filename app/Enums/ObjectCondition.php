@@ -3,8 +3,9 @@
 namespace App\Enums;
 
 use App\Enums\Concerns\HasLabels;
+use Filament\Support\Contracts\HasLabel;
 
-enum ObjectCondition: string implements \Filament\Support\Contracts\HasLabel
+enum ObjectCondition: string implements HasLabel
 {
     use HasLabels;
 

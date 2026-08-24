@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\Role;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
+use App\Notifications\AccountSuspended;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -142,7 +143,7 @@ class UserResource extends Resource
                         ]);
 
                         if ($record->is_blocked) {
-                            $record->notify(new \App\Notifications\AccountSuspended());
+                            $record->notify(new AccountSuspended);
                         }
                     }),
                 Tables\Actions\EditAction::make(),

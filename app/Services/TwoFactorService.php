@@ -10,9 +10,7 @@ use RuntimeException;
 
 class TwoFactorService
 {
-    public function __construct(private readonly SmsManager $sms)
-    {
-    }
+    public function __construct(private readonly SmsManager $sms) {}
 
     /**
      * Generate and send a one-time code to the user's phone.

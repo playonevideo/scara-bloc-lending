@@ -7,9 +7,7 @@ use RuntimeException;
 
 class SmsManager
 {
-    public function __construct(private readonly Container $container)
-    {
-    }
+    public function __construct(private readonly Container $container) {}
 
     /**
      * Resolve the configured SMS provider.
@@ -22,7 +20,7 @@ class SmsManager
                 (string) config('services.twilio.token'),
                 (string) config('services.twilio.from'),
             ),
-            'log' => new LogSmsProvider(),
+            'log' => new LogSmsProvider,
             default => throw new RuntimeException('Unknown SMS provider: '.config('sms.provider')),
         };
     }

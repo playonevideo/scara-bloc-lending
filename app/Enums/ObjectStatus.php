@@ -3,8 +3,9 @@
 namespace App\Enums;
 
 use App\Enums\Concerns\HasLabels;
+use Filament\Support\Contracts\HasLabel;
 
-enum ObjectStatus: string implements \Filament\Support\Contracts\HasLabel
+enum ObjectStatus: string implements HasLabel
 {
     use HasLabels;
 

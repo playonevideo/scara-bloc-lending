@@ -10,8 +10,7 @@ class LoanNotification extends Notification
     public function __construct(
         public Loan $loan,
         public string $message,
-    ) {
-    }
+    ) {}
 
     public function via(object $notifiable): array
     {

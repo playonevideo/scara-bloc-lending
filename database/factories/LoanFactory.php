@@ -4,11 +4,12 @@ namespace Database\Factories;
 
 use App\Enums\LoanStatus;
 use App\Models\Item;
+use App\Models\Loan;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Loan>
+ * @extends Factory<Loan>
  */
 class LoanFactory extends Factory
 {

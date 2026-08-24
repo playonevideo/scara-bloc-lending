@@ -8,9 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EnsureUserHasRole
 {
-    /**
-     * @param  string  ...$roles
-     */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         if (! $request->user() || ! in_array($request->user()->role->value, $roles, true)) {

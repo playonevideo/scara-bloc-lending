@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Item;
-use App\Models\User;
 use Tests\Concerns\CreatesBuildingStructure;
 use Tests\TestCase;
 

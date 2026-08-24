@@ -10,8 +10,7 @@ class TwilioSmsProvider implements SmsProvider
         private readonly string $sid,
         private readonly string $token,
         private readonly string $from,
-    ) {
-    }
+    ) {}
 
     public function send(string $to, string $message): void
     {

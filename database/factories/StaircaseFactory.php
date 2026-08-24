@@ -3,10 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\Building;
+use App\Models\Staircase;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Staircase>
+ * @extends Factory<Staircase>
  */
 class StaircaseFactory extends Factory
 {

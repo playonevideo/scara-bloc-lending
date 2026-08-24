@@ -9,8 +9,7 @@ class NewMessage extends Notification
 {
     public function __construct(
         public Message $message,
-    ) {
-    }
+    ) {}
 
     public function via(object $notifiable): array
     {

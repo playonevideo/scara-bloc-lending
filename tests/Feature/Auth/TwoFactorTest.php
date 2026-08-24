@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\TwoFactorChallenge;
 use App\Models\User;
+use App\Services\TwoFactorService;
 use Tests\Concerns\CreatesBuildingStructure;
 use Tests\TestCase;
 
@@ -38,7 +39,7 @@ class TwoFactorTest extends TestCase
             'phone' => '+40712345678',
         ]);
 
-        $service = app(\App\Services\TwoFactorService::class);
+        $service = app(TwoFactorService::class);
         $code = $service->sendCode($user);
 
         $this->assertTrue($service->verify($user, $code));
@@ -52,7 +53,7 @@ class TwoFactorTest extends TestCase
             'phone' => '+40712345678',
         ]);
 
-        $service = app(\App\Services\TwoFactorService::class);
+        $service = app(TwoFactorService::class);
         $code = $service->sendCode($user);
 
         TwoFactorChallenge::query()->update(['expires_at' => now()->subMinute()]);

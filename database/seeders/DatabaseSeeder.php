@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Enums\LoanStatus;
 use App\Enums\ObjectStatus;
-use App\Enums\Role;
 use App\Models\Apartment;
 use App\Models\Building;
 use App\Models\Category;
@@ -17,6 +16,7 @@ use App\Models\Review;
 use App\Models\Staircase;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
         $firstNames = ['Andrei', 'Mihai', 'Ioana', 'Elena', 'Cristian', 'Maria', 'Alexandru', 'Ana', 'Vlad', 'Raluca', 'George', 'Simona', 'Radu', 'Daniela', 'Tudor'];
         foreach ($firstNames as $index => $firstName) {
             $residents->push(User::factory()->create([
-                'name' => $firstName.' '.\Illuminate\Support\Str::upper(\Illuminate\Support\Str::random(1)).'.',
+                'name' => $firstName.' '.Str::upper(Str::random(1)).'.',
                 'email' => strtolower($firstName).'@vecini.ro',
                 'apartment_id' => $apartments[$index % $apartments->count()]->id,
                 'phone' => '+4072'.random_int(1000000, 9999999),

@@ -7,9 +7,7 @@ use Illuminate\Notifications\Notification;
 
 class ReviewReceived extends Notification
 {
-    public function __construct(public Review $review)
-    {
-    }
+    public function __construct(public Review $review) {}
 
     public function via(object $notifiable): array
     {

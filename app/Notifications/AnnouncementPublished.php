@@ -7,9 +7,7 @@ use Illuminate\Notifications\Notification;
 
 class AnnouncementPublished extends Notification
 {
-    public function __construct(public Announcement $announcement)
-    {
-    }
+    public function __construct(public Announcement $announcement) {}
 
     public function via(object $notifiable): array
     {

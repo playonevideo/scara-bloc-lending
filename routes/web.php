@@ -1,23 +1,23 @@
 <?php
 
-use App\Http\Controllers\{
-    Auth\AuthenticatedSessionController,
-    Auth\NewPasswordController,
-    Auth\PasswordResetLinkController,
-    Auth\RegisteredUserController,
-    Auth\TwoFactorChallengeController,
-    CommunityRequestController,
-    ConversationController,
-    DashboardController,
-    FavoriteController,
-    HistoryController,
-    LoanController,
-    NotificationController,
-    ObjectController,
-    ProfileController,
-    ReportController,
-    SecurityController,
-};
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\TwoFactorChallengeController;
+use App\Http\Controllers\CommunityRequestController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\LoanController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ObjectController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SecurityController;
+use App\Http\Controllers\WebAuthn\WebAuthnLoginController;
+use App\Http\Controllers\WebAuthn\WebAuthnRegisterController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard')->name('home');
@@ -52,13 +52,13 @@ Route::middleware('guest')->group(function () {
 */
 Route::prefix('webauthn')->group(function () {
     Route::middleware('guest')->group(function () {
-        Route::post('login/options', [\App\Http\Controllers\WebAuthn\WebAuthnLoginController::class, 'options']);
-        Route::post('login', [\App\Http\Controllers\WebAuthn\WebAuthnLoginController::class, 'login']);
+        Route::post('login/options', [WebAuthnLoginController::class, 'options']);
+        Route::post('login', [WebAuthnLoginController::class, 'login']);
     });
 
     Route::middleware('auth')->group(function () {
-        Route::post('register/options', [\App\Http\Controllers\WebAuthn\WebAuthnRegisterController::class, 'options']);
-        Route::post('register', [\App\Http\Controllers\WebAuthn\WebAuthnRegisterController::class, 'register']);
+        Route::post('register/options', [WebAuthnRegisterController::class, 'options']);
+        Route::post('register', [WebAuthnRegisterController::class, 'register']);
     });
 });
 
