@@ -6,6 +6,12 @@
     <h1 class="text-xl font-semibold text-gray-900">Verificare în doi pași</h1>
     <p class="mt-1 text-sm text-gray-500">Am trimis un cod prin SMS pe numărul tău de telefon. Introdu-l mai jos.</p>
 
+    @if (session('sms_code'))
+        <div class="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800 ring-1 ring-amber-200">
+            Mod dezvoltare — codul de verificare: <strong class="tracking-widest">{{ session('sms_code') }}</strong>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('two-factor.verify') }}" class="mt-6 space-y-5">
         @csrf
 
