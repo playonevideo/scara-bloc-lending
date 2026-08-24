@@ -7,7 +7,7 @@
         <div class="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
             @if ($object->coverImage())
                 <div class="aspect-[16/9] w-full overflow-hidden bg-gray-100">
-                    <img src="{{ \Illuminate\Support\Facades\Storage::url($object->coverImage()->path) }}" alt="{{ $object->title }}"
+                    <img src="/storage/{{ $object->coverImage()->path }}" alt="{{ $object->title }}"
                         class="h-full w-full object-cover">
                 </div>
             @endif

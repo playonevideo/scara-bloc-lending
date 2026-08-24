@@ -2,7 +2,7 @@
 
 @php
     $image = $object->coverImage();
-    $imageUrl = $image ? \Illuminate\Support\Facades\Storage::url($image->path) : null;
+    $imageUrl = $image ? '/storage/'.$image->path : null;
 @endphp
 
 <a href="{{ route('objects.show', $object) }}" class="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md">
