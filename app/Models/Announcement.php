@@ -28,7 +28,8 @@ class Announcement extends Model
         static::created(function (Announcement $announcement) {
             User::query()
                 ->where('role', Role::Resident->value)
-                ->each->notify(new AnnouncementPublished($announcement));
+                ->get()
+                ->each(fn (User $resident) => $resident->notify(new AnnouncementPublished($announcement)));
         });
     }
 }

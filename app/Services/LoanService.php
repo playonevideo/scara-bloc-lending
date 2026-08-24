@@ -146,7 +146,7 @@ class LoanService
 
     private function assertRequestable(Item $object, User $borrower, Carbon $startsAt, Carbon $endsAt): void
     {
-        if (! $object->isPublished()) {
+        if (! $object->is_published) {
             throw ValidationException::withMessages(['object' => 'Acest obiect nu este disponibil.']);
         }
 

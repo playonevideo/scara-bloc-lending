@@ -4,12 +4,15 @@ namespace App\Models;
 
 use App\Enums\LoanStatus;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Loan extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'object_id',
         'borrower_id',
@@ -42,7 +45,7 @@ class Loan extends Model
 
     public function object(): BelongsTo
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class, 'object_id');
     }
 
     public function borrower(): BelongsTo

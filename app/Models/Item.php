@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ObjectCondition;
 use App\Enums\ObjectStatus;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Item extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'objects';
 
@@ -56,17 +57,17 @@ class Item extends Model
 
     public function images(): HasMany
     {
-        return $this->hasMany(ObjectImage::class)->orderBy('sort_order');
+        return $this->hasMany(ObjectImage::class, 'object_id')->orderBy('sort_order');
     }
 
     public function loans(): HasMany
     {
-        return $this->hasMany(Loan::class);
+        return $this->hasMany(Loan::class, 'object_id');
     }
 
     public function favorites(): HasMany
     {
-        return $this->hasMany(Favorite::class);
+        return $this->hasMany(Favorite::class, 'object_id');
     }
 
     public function reports(): MorphMany

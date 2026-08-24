@@ -11,6 +11,6 @@ class ObjectImage extends Model
 
     public function object(): BelongsTo
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class, 'object_id');
     }
 }

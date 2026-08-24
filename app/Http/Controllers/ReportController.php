@@ -44,7 +44,8 @@ class ReportController extends Controller
 
         User::query()
             ->whereIn('role', [Role::Admin->value, Role::SuperAdmin->value])
-            ->each->notify(new ObjectReported($report));
+            ->get()
+            ->each(fn (User $admin) => $admin->notify(new ObjectReported($report)));
 
         return back()->with('status', 'Mulțumim! Raportarea a fost trimisă administratorilor.');
     }

@@ -76,15 +76,15 @@ class ConversationController extends Controller
 
     private function findOrCreate(User $a, User $b, ?int $objectId = null): Conversation
     {
-        $conversation = $a->conversations()
-            ->whereHas('participants', fn ($q) => $q->whereKey($b->id))
+        $conversation = Conversation::query()
             ->whereNull('loan_id')
+            ->whereHas('participants', fn ($q) => $q->whereKey($a->id))
+            ->whereHas('participants', fn ($q) => $q->whereKey($b->id))
             ->first();
 
         if (! $conversation) {
             $conversation = Conversation::create([
                 'object_id' => $objectId,
-                'subject' => $objectId ? null : null,
             ]);
 
             $conversation->participants()->attach([$a->id, $b->id]);
