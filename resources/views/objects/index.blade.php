@@ -16,7 +16,7 @@
         <div class="flex flex-col gap-3 sm:flex-row">
             <div class="flex-1">
                 <label for="q" class="sr-only">Caută</label>
-                <input type="search" name="q" id="q" value="{{ $filters['q'] ?? '' }}" placeholder="Caută un obiect..."
+                <input type="search" name="q" id="q" value="{{ $filters['q'] ?? '' }}" placeholder="Caută un obiect după nume..."
                     class="block w-full rounded-xl border-0 bg-gray-100 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:bg-white focus:ring-2 focus:ring-brand-500">
             </div>
             <button type="submit" class="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700">Caută</button>
@@ -63,7 +63,7 @@
 
     @if ($objects->isEmpty())
         <div class="rounded-2xl border border-dashed border-gray-200 bg-white p-12 text-center">
-            <p class="text-gray-500">Nu am găsit niciun obiect.</p>
+            <p class="text-gray-500">Nu am găsit obiecte care să corespundă căutării tale.</p>
         </div>
     @else
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

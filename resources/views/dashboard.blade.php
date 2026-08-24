@@ -70,7 +70,7 @@
 
         @if ($availableObjects->isEmpty())
             <p class="rounded-2xl border border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-500">
-                Momentan nu există obiecte disponibile. Fii primul care publică un obiect!
+                Nu există încă obiecte disponibile. Fii primul care publică unul!
             </p>
         @else
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

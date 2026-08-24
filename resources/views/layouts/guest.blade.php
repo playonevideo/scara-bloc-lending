@@ -17,7 +17,7 @@
                     <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-xl font-bold text-white shadow-lg shadow-brand-600/20">V</span>
                     <span class="text-2xl font-bold text-gray-900">{{ config('app.name', 'Vecini') }}</span>
                 </a>
-                <p class="mt-2 text-sm text-gray-500">Împrumută și partajează obiecte cu vecinii tăi.</p>
+                <p class="mt-2 text-sm text-gray-500">Împrumută și pune la dispoziție obiecte, alături de vecinii tăi de scară.</p>
             </div>
 
             <div class="rounded-3xl bg-white p-6 shadow-xl shadow-brand-900/5 ring-1 ring-gray-100 sm:p-8">

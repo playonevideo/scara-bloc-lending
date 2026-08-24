@@ -26,10 +26,15 @@ class ConversationResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('subject'),
+                Forms\Components\TextInput::make('subject')
+                    ->label('Subiect')
+                    ->maxLength(255),
                 Forms\Components\Select::make('object_id')
-                    ->relationship('object', 'title'),
+                    ->label('Obiect')
+                    ->relationship('object', 'title')
+                    ->searchable(),
                 Forms\Components\Select::make('loan_id')
+                    ->label('Împrumut')
                     ->relationship('loan', 'id'),
             ]);
     }
@@ -39,33 +44,25 @@ class ConversationResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('subject')
-                    ->searchable(),
+                    ->label('Subiect')
+                    ->searchable()
+                    ->placeholder('—'),
                 Tables\Columns\TextColumn::make('object.title')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Obiect')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('loan.id')
-                    ->numeric()
+                    ->label('Împrumut')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creat')
+                    ->dateTime('d.m.Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
