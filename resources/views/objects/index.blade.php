@@ -17,7 +17,7 @@
             <div class="flex-1">
                 <label for="q" class="sr-only">Caută</label>
                 <input type="search" name="q" id="q" value="{{ $filters['q'] ?? '' }}" placeholder="Caută un obiect..."
-                    class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500">
+                    class="block w-full rounded-xl border-0 bg-gray-100 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:bg-white focus:ring-2 focus:ring-brand-500">
             </div>
             <button type="submit" class="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700">Caută</button>
         </div>
@@ -25,7 +25,7 @@
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <div>
                 <label for="category" class="block text-xs font-medium text-gray-500">Categorie</label>
-                <select name="category" id="category" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500">
+                <select name="category" id="category" class="mt-1 block w-full rounded-xl border-0 bg-gray-100 px-3 py-2.5 text-gray-900 focus:bg-white focus:ring-2 focus:ring-brand-500">
                     <option value="">Toate</option>
                     @foreach ($categories as $category)
                         <option value="{{ $category->id }}" @selected(($filters['category'] ?? '') == $category->id)>{{ $category->name }}</option>
@@ -34,7 +34,7 @@
             </div>
             <div>
                 <label for="status" class="block text-xs font-medium text-gray-500">Disponibilitate</label>
-                <select name="status" id="status" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500">
+                <select name="status" id="status" class="mt-1 block w-full rounded-xl border-0 bg-gray-100 px-3 py-2.5 text-gray-900 focus:bg-white focus:ring-2 focus:ring-brand-500">
                     <option value="">Toate</option>
                     <option value="available" @selected(($filters['status'] ?? '') === 'available')>Disponibile</option>
                     <option value="reserved" @selected(($filters['status'] ?? '') === 'reserved')>Rezervate</option>
@@ -43,7 +43,7 @@
             </div>
             <div>
                 <label for="floor" class="block text-xs font-medium text-gray-500">Etaj</label>
-                <select name="floor" id="floor" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500">
+                <select name="floor" id="floor" class="mt-1 block w-full rounded-xl border-0 bg-gray-100 px-3 py-2.5 text-gray-900 focus:bg-white focus:ring-2 focus:ring-brand-500">
                     <option value="">Toate</option>
                     @foreach ($floors as $floor)
                         <option value="{{ $floor }}" @selected(($filters['floor'] ?? '') == $floor)>Etajul {{ $floor }}</option>
@@ -52,7 +52,7 @@
             </div>
             <div>
                 <label for="sort" class="block text-xs font-medium text-gray-500">Sortare</label>
-                <select name="sort" id="sort" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500">
+                <select name="sort" id="sort" class="mt-1 block w-full rounded-xl border-0 bg-gray-100 px-3 py-2.5 text-gray-900 focus:bg-white focus:ring-2 focus:ring-brand-500">
                     <option value="newest" @selected(($filters['sort'] ?? 'newest') === 'newest')>Cele mai noi</option>
                     <option value="popular" @selected(($filters['sort'] ?? '') === 'popular')>Populare</option>
                     <option value="rating" @selected(($filters['sort'] ?? '') === 'rating')>După rating</option>
