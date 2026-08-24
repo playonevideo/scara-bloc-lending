@@ -109,6 +109,25 @@ class SecurityController extends Controller
         return back()->with('status', 'Numărul de telefon a fost actualizat cu succes.');
     }
 
+    public function resendPhoneCode(Request $request, TwoFactorService $twoFactor): RedirectResponse
+    {
+        $user = $request->user();
+
+        $pendingPhone = $request->session()->get('auth.pending_phone');
+
+        if (! $pendingPhone) {
+            return back()->with('status', 'Introdu mai întâi noul număr de telefon.');
+        }
+
+        try {
+            $twoFactor->sendCode($user, $pendingPhone);
+        } catch (\RuntimeException $e) {
+            throw ValidationException::withMessages(['code' => $e->getMessage()]);
+        }
+
+        return back()->with('status', 'Un nou cod a fost trimis pe '.$pendingPhone.'.');
+    }
+
     public function removePasskey(Request $request, string $credential): RedirectResponse
     {
         $request->user()->webAuthnCredentials()->whereKey($credential)->first()?->delete();

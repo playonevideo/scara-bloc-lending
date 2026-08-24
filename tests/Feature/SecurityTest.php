@@ -47,4 +47,22 @@ class SecurityTest extends TestCase
             'current_password' => 'wrong-password',
         ])->assertSessionHasErrors('current_password');
     }
+
+    public function test_resend_phone_code_sends_a_new_code_after_throttle(): void
+    {
+        $user = User::factory()->create(['phone' => '0711111111']);
+        $service = app(TwoFactorService::class);
+
+        $service->sendCode($user, '0767965218');
+        $this->assertDatabaseCount('two_factor_challenges', 1);
+
+        $this->travel(31)->seconds();
+
+        $this->actingAs($user)
+            ->withSession(['auth.pending_phone' => '0767965218'])
+            ->post('/setari/securitate/telefon/retrimite')
+            ->assertRedirect();
+
+        $this->assertDatabaseCount('two_factor_challenges', 2);
+    }
 }

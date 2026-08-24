@@ -115,6 +115,7 @@ Route::middleware(['auth', 'active', 'resident'])->group(function () {
     Route::post('/setari/securitate/passkeys/{credential}', [SecurityController::class, 'removePasskey'])->name('security.remove-passkey');
     Route::post('/setari/securitate/telefon', [SecurityController::class, 'changePhone'])->name('security.change-phone');
     Route::post('/setari/securitate/telefon/verifica', [SecurityController::class, 'verifyPhoneChange'])->name('security.verify-phone');
+    Route::post('/setari/securitate/telefon/retrimite', [SecurityController::class, 'resendPhoneCode'])->name('security.resend-phone-code');
 
     // Favorites
     Route::get('/favorite', [FavoriteController::class, 'index'])->name('favorites.index');

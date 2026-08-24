@@ -28,10 +28,15 @@
         </button>
     </form>
 
-    <form method="POST" action="{{ route('two-factor.resend') }}" class="mt-4 text-center">
+    <form method="POST" action="{{ route('two-factor.resend') }}" class="mt-4 text-center"
+        x-data="{ remaining: {{ config('sms.code.throttle_seconds', 30) }} }"
+        x-init="setInterval(() => { if (remaining > 0) remaining-- }, 1000)">
         @csrf
-        <button type="submit" class="text-sm font-medium text-brand-600 hover:text-brand-700">
-            Nu ai primit codul? Trimite din nou
+        <button type="submit" :disabled="remaining > 0"
+            class="text-sm font-medium transition"
+            :class="remaining > 0 ? 'cursor-not-allowed text-gray-400' : 'text-brand-600 hover:text-brand-700'">
+            <span x-show="remaining > 0" x-cloak>Nu ai primit codul? Încearcă din nou în <span x-text="remaining"></span> s</span>
+            <span x-show="remaining === 0" x-cloak>Nu ai primit codul? Trimite din nou</span>
         </button>
     </form>
 @endsection
