@@ -1,66 +1,263 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Vecini — Platformă de partajare și împrumut de obiecte pentru locatari
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+O aplicație web modernă destinată unei scări de bloc / unei comunități de locatari. Locatarii pot pune la dispoziția vecinilor obiecte pe care le pot împrumuta, pot solicita obiecte de la alți locatari, pot comunica prin chat intern și pot construi, prin recenzii, o reputație de încredere în comunitate.
 
-## About Laravel
+Scopul este încurajarea colaborării între vecini, reducerea cumpărării inutile a obiectelor folosite rar și crearea unei comunități mai bine conectate.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Caracteristici
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Marketplace intern** dedicat exclusiv locatarilor, cu căutare, filtre (categorie, disponibilitate, etaj) și sortare (cele mai noi, populare, după rating).
+- **Publicarea obiectelor** cu fotografii, categorie, stare, perioadă maximă de împrumut și condiții speciale.
+- **Sistem de solicitare a împrumutului** cu flux complet: `Disponibil → Solicitat → Acceptat → Împrumutat → Returnat → Finalizat` (plus `Refuzat`, `Anulat`, `Întârziat`).
+- **Prevenirea conflictelor de rezervare** (fără rezervări simultane, duplicate sau care se suprapun), atât în interfață cât și server-side.
+- **Chat intern** 1-la-1, cu timestamp, status citit/necitit și arhivare.
+- **Notificări în aplicație** pentru solicitări, acceptări, mesaje, recenzii, raportări și anunțuri administrative.
+- **Sistem de rating** (1–5 stele) și reputație a locatarilor.
+- **Raportare și moderare** (obiecte, descrieri, spam, comportament abuziv, mesaje).
+- **Panou de administrare Filament** complet separat de interfața locatarului, cu statistici, grafice și jurnal de audit.
+- **Autentificare modernă**: parole + WebAuthn / Passkeys (amprentă, Face ID, Windows Hello) + autentificare în doi pași prin SMS.
+- **Sistem de invitații** — comunitatea este privată; conturile se creează doar prin invitație.
+- **Roluri**: Super Administrator, Administrator și Locatar.
+- **Confidențialitate (GDPR)**: controlul vizibilității datelor, minimizarea datelor, anonimizare la ștergere.
+- **Responsive mobile-first** și accesibil.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Stack tehnologic
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Backend**: PHP 8.3+, Laravel 12
+- **Bază de date**: MySQL (în producție) / SQLite (în dezvoltare locală)
+- **ORM**: Eloquent
+- **Admin**: Filament 3 (Resources, Tables, Forms, Actions, Notifications, Widgets)
+- **Frontend locatar**: Blade + Livewire 3 + Alpine.js + Tailwind CSS 4
+- **Autentificare**: [laragear/webauthn](https://github.com/Laragear/WebAuthn) (WebAuthn / Passkeys), [Twilio SDK](https://www.twilio.com/) (SMS 2FA)
+- **QR**: simplesoftwareio/simple-qrcode
+- **Teste**: PHPUnit
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Cerințe de instalare
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP >= 8.3 (extensii: `pdo_mysql`, `pdo_sqlite`, `mbstring`, `openssl`, `gd`, `zip`, `intl`, `bcmath`)
+- Composer 2
+- Node.js >= 18 și npm
+- MySQL 8 (pentru producție) sau SQLite (pentru dezvoltare locală)
+- Git
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Instalare
 
-## Contributing
+```bash
+# 1. Clonează repository-ul
+git clone https://github.com/<utilizator>/scara-bloc-lending.git
+cd scara-bloc-lending
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# 2. Instalează dependențele PHP
+composer install
 
-## Code of Conduct
+# 3. Copiază fișierul de mediu
+cp .env.example .env
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# 4. Generează cheia aplicației
+php artisan key:generate
 
-## Security Vulnerabilities
+# 5. Configurează baza de date (vezi mai jos), apoi rulează migrațiile
+php artisan migrate --seed
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# 6. Configurează storage-ul public
+php artisan storage:link
 
-## License
+# 7. Instalează și compilează frontend-ul
+npm install
+npm run build
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# 8. Pornește aplicația
+php artisan serve
+```
+
+---
+
+## Configurare `.env`
+
+Variabilele importante din `.env` (valorile reale NU se commit-uiesc — fișierul `.env` este în `.gitignore`):
+
+```dotenv
+APP_NAME="Vecini"
+APP_URL=http://localhost
+
+# --- Bază de date (MySQL în producție) ---
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=scara_bloc_lending
+DB_USERNAME=root
+DB_PASSWORD=
+
+# Pentru dezvoltare locală fără server MySQL, folosește SQLite:
+# DB_CONNECTION=sqlite
+# DB_DATABASE=/cale/absoluta/catre/database/database.sqlite
+
+# --- SMS / 2FA (Twilio) ---
+SMS_PROVIDER=twilio      # "twilio" sau "log" (dezvoltare)
+TWILIO_SID=
+TWILIO_TOKEN=
+TWILIO_FROM=+15555555555
+
+# Parametri codului de verificare
+SMS_CODE_LENGTH=6
+SMS_CODE_EXPIRES_MINUTES=10
+SMS_CODE_MAX_ATTEMPTS=5
+SMS_CODE_THROTTLE_SECONDS=60
+
+# --- WebAuthn / Passkeys ---
+WEBAUTHN_NAME="Vecini"
+WEBAUTHN_ID=localhost     # domeniul pe care rulează aplicația
+WEBAUTHN_ORIGINS=
+
+# --- Mail ---
+MAIL_MAILER=log
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+---
+
+## Configurarea bazei de date
+
+**MySQL (producție):**
+
+1. Creează baza de date:
+   ```sql
+   CREATE DATABASE scara_bloc_lending CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   ```
+2. Completează variabilele `DB_*` în `.env`.
+3. Rulează `php artisan migrate --seed`.
+
+**SQLite (dezvoltare locală):**
+
+1. Setează `DB_CONNECTION=sqlite`.
+2. Creează fișierul: `touch database/database.sqlite`.
+3. Rulează `php artisan migrate --seed`.
+
+Migrațiile creează toate tabelele (utilizatori, clădiri, scări, etaje, apartamente, categorii, obiecte, imagini, împrumuturi, conversații, mesaje, recenzii, raportări, notificări, invitații, credențiale WebAuthn, jurnal de audit etc.). Seeder-ele adaugă date demonstrative: `Bloc A → Scara 1`, 44 de apartamente, 15 locatari, 25 de obiecte, împrumuturi, conversații și recenzii.
+
+---
+
+## Configurarea serviciului SMS (Twilio)
+
+1. Creează un cont pe [Twilio](https://www.twilio.com/) și obține `Account SID` și `Auth Token`.
+2. Cumpără/activează un număr de telefon capabil să trimită SMS.
+3. Completează în `.env`: `SMS_PROVIDER=twilio`, `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_FROM`.
+
+Pentru dezvoltare, `SMS_PROVIDER=log` scrie codul de verificare în log-ul Laravel (`storage/logs/laravel.log`) în loc să trimită SMS real.
+
+Codul de verificare: expiră, are limită de încercări, rate limiting și nu poate fi reutilizat (vezi `app/Services/TwoFactorService.php`).
+
+---
+
+## Configurarea autentificării WebAuthn / Passkeys
+
+WebAuthn folosește pachetul `laragear/webauthn`. Configurarea se face în `.env`:
+
+```dotenv
+WEBAUTHN_NAME="Vecini"
+WEBAUTHN_ID=localhost
+WEBAUTHN_ORIGINS=
+```
+
+- `WEBAUTHN_NAME` — numele afișat de dispozitiv la autentificare.
+- `WEBAUTHN_ID` — domeniul (Relying Party ID) pe care rulează aplicația (ex. `vecini.ro`). În producție setează domeniul real.
+- `WEBAUTHN_ORIGINS` — origini suplimentare permise (separate prin virgulă), dacă este cazul.
+
+Datele biometrice (amprentă, Face ID, Windows Hello) rămân pe dispozitiv; serverul verifică doar autentificarea criptografică.
+
+Un locatar își înregistrează passkey-urile din **Profil → Securitate**, iar autentificarea cu passkey este disponibilă pe pagina de login.
+
+---
+
+## Configurarea GitHub
+
+Repository-ul este public și folosește un workflow Git structurat:
+
+- `main` — versiunea stabilă.
+- `develop` — integrarea funcționalităților.
+- `feature/<nume>` — funcționalități noi.
+- `fix/<nume>` — corecturi.
+
+```bash
+# Lucrează pe o ramură de feature
+git checkout develop
+git checkout -b feature/nume-functionalitate
+# ... modificări + commit-uri ...
+git checkout develop
+git merge --no-ff feature/nume-functionalitate
+git push origin develop
+```
+
+---
+
+## Comenzi utile
+
+```bash
+php artisan serve          # pornește serverul de dezvoltare
+php artisan migrate        # rulează migrațiile
+php artisan migrate:fresh --seed   # reconstruiește baza de date cu date demo
+php artisan test           # rulează testele
+npm run dev                # compilează activele în mod dev (cu hot-reload)
+npm run build              # compilează activele pentru producție
+```
+
+---
+
+## Conturi de administrator pentru dezvoltare / demonstrație
+
+După rularea `php artisan migrate:fresh --seed`, sunt disponibile:
+
+| Rol               | Email            | Parolă    |
+|-------------------|------------------|-----------|
+| Super Administrator | `admin@vecini.ro`  | `password` |
+| Administrator      | `admin2@vecini.ro` | `password` |
+
+Locatarii demo au emailuri de forma `nume@vecini.ro` (ex. `andrei@vecini.ro`) și parola `password`.
+
+Panoul de administrare este disponibil la `/admin`.
+
+---
+
+## Testing
+
+```bash
+php artisan test
+```
+
+Testele acoperă: autentificarea (login, parolă greșită, cont blocat, logout), autentificarea în doi pași (redirect la challenge, expirare, reutilizare), autorizarea (acces admin vs. locatar), CRUD obiecte, sistemul de împrumut (solicitare, conflict de rezervare, acceptare/refuz), chat-ul, notificările, recenziile și raportările.
+
+---
+
+## Deployment
+
+Variante de hosting recomandate: **Laravel Forge**, **Laravel Cloud**, un **VPS** (DigitalOcean, Hetzner) sau **Render / Railway**.
+
+Pași generali:
+
+1. Clonează repository-ul pe server și `composer install --no-dev --optimize-autoloader`.
+2. Configurează `.env` (cheie, MySQL, SMS, WebAuthn, mail).
+3. `php artisan key:generate` și `php artisan migrate --force --seed`.
+4. `php artisan storage:link`.
+5. `npm ci && npm run build`.
+6. `php artisan config:cache && php artisan route:cache && php artisan view:cache`.
+7. Configurează webserverul (Nginx/Apache) să servească `public/`.
+8. Configurează un programator pentru sarcini programate: `php artisan schedule:run` (remindere împrumuturi).
+9. Setează `APP_ENV=production` și `APP_DEBUG=false`.
+10. Pentru coada de notificări: `php artisan queue:work` (dacă folosești notificări asincrone).
+
+> GitHub rămâne repository-ul central al proiectului.
+
+---
+
+## Licență
+
+Proiectul este distribuit sub licența [MIT](https://opensource.org/licenses/MIT).
