@@ -21,6 +21,34 @@ class ObjectImageSeeder extends Seeder
         ['#f97316', '#ea580c'],
     ];
 
+    private const KEYWORDS = [
+        'Bormașină Bosch' => 'power drill',
+        'Scară telescopică' => 'ladder',
+        'Aspirator profesional' => 'vacuum cleaner',
+        'Mașină de găurit' => 'electric drill',
+        'Set de șurubelnițe' => 'screwdriver',
+        'Cărucior pentru copii' => 'baby stroller',
+        'Masă pliabilă' => 'folding table',
+        'Set de scaune' => 'chair',
+        'Fierăstrău electric' => 'circular saw',
+        'Aparat de sudură' => 'welding machine',
+        'Grătar portabil' => 'barbecue grill',
+        'Trambulină fitness' => 'trampoline',
+        'Colecție de cărți SF' => 'stack of books',
+        'Proiector video' => 'projector',
+        'Boxă portabilă' => 'bluetooth speaker',
+        'Aerotermă' => 'space heater',
+        'Pompa de bicicletă' => 'bike pump',
+        'Set de chei' => 'wrench tools',
+        'Flex' => 'angle grinder',
+        'Nivelă cu laser' => 'laser level',
+        'Cort de camping' => 'camping tent',
+        'Sanie' => 'sled winter',
+        'Bicicletă de oraș' => 'city bicycle',
+        'Mixer de bucătărie' => 'stand mixer',
+        'Mașină de cusut' => 'sewing machine',
+    ];
+
     public function run(): void
     {
         $this->clearExisting();
@@ -28,11 +56,9 @@ class ObjectImageSeeder extends Seeder
         $items = Item::query()->get();
 
         foreach ($items as $index => $item) {
-            $icon = $item->category?->icon ?? '📦';
-            [$from, $to] = self::PALETTE[$index % count(self::PALETTE)];
-
-            $path = $this->downloadPhoto($item)
-                ?? $this->writeFallback($item, $icon, $from, $to);
+            $path = $this->downloadFromOpenverse($item)
+                ?? $this->downloadFromPicsum($item)
+                ?? $this->writeFallback($item, $index);
 
             $item->images()->create([
                 'path' => $path,
@@ -41,25 +67,53 @@ class ObjectImageSeeder extends Seeder
         }
     }
 
-    /**
-     * Remove previously generated demo images so re-seeding refreshes them.
-     */
     private function clearExisting(): void
     {
         ObjectImage::query()->delete();
         Storage::disk('public')->deleteDirectory('objects');
     }
 
-    /**
-     * Download a real photo from Lorem Picsum (Unsplash-sourced) seeded by the object slug.
-     */
-    private function downloadPhoto(Item $item): ?string
+    private function downloadFromOpenverse(Item $item): ?string
+    {
+        $keyword = self::KEYWORDS[$item->title] ?? $item->category?->slug ?? 'tools';
+
+        try {
+            $search = Http::withoutVerifying()->timeout(20)->get('https://api.openverse.org/v1/images/', [
+                'q' => $keyword,
+                'page_size' => 1,
+            ]);
+
+            if (! $search->successful()) {
+                return null;
+            }
+
+            $results = $search->json('results') ?? [];
+            $imageUrl = $results[0]['thumbnail'] ?? $results[0]['url'] ?? null;
+
+            if (! $imageUrl) {
+                return null;
+            }
+
+            $image = Http::withoutVerifying()->timeout(20)->get($imageUrl);
+
+            if (! $image->successful()) {
+                return null;
+            }
+
+            $path = 'objects/'.$item->slug.$this->extensionFor($image->header('Content-Type'));
+            Storage::disk('public')->put($path, $image->body());
+
+            return $path;
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    private function downloadFromPicsum(Item $item): ?string
     {
         $url = 'https://picsum.photos/seed/'.urlencode($item->slug).'/800/600';
 
         try {
-            // withoutVerifying() is used because the local PHP build may lack a CA bundle;
-            // the placeholder images are public and non-sensitive.
             $response = Http::withoutVerifying()->timeout(20)->get($url);
 
             if ($response->successful()) {
@@ -69,18 +123,31 @@ class ObjectImageSeeder extends Seeder
                 return $path;
             }
         } catch (\Throwable) {
-            // Fall through to the generated placeholder.
+            // Fall through.
         }
 
         return null;
     }
 
-    private function writeFallback(Item $item, string $icon, string $from, string $to): string
+    private function writeFallback(Item $item, int $index): string
     {
+        $icon = $item->category?->icon ?? '📦';
+        [$from, $to] = self::PALETTE[$index % count(self::PALETTE)];
+
         $path = 'objects/'.$item->slug.'.svg';
         Storage::disk('public')->put($path, $this->renderSvg($item->title, $icon, $from, $to));
 
         return $path;
+    }
+
+    private function extensionFor(string $contentType): string
+    {
+        return match (strtolower(explode(';', $contentType)[0])) {
+            'image/png' => '.png',
+            'image/webp' => '.webp',
+            'image/gif' => '.gif',
+            default => '.jpg',
+        };
     }
 
     private function renderSvg(string $title, string $icon, string $from, string $to): string
