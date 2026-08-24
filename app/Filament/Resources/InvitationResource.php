@@ -63,8 +63,9 @@ class InvitationResource extends Resource
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Telefon')
                     ->placeholder('—'),
-                Tables\Columns\TextColumn::make('apartment.fullLabel')
-                    ->label('Apartament'),
+                Tables\Columns\TextColumn::make('apartment.number')
+                    ->label('Apartament')
+                    ->getStateUsing(fn ($record) => $record->apartment?->fullLabel() ?? '—'),
                 Tables\Columns\TextColumn::make('expires_at')
                     ->label('Expiră')
                     ->dateTime('d.m.Y H:i')
