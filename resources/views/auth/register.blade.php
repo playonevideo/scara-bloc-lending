@@ -31,7 +31,7 @@
             <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" autocomplete="tel"
                 placeholder="+40 7xx xxx xxx"
                 class="mt-1 block w-full rounded-xl border-0 bg-gray-100 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:bg-white focus:ring-2 focus:ring-brand-500">
-            <p class="mt-1 text-xs text-gray-400">Folosit pentru autentificarea în doi pași prin SMS.</p>
+            <p class="mt-1 text-xs text-gray-400">Folosit pentru autentificarea în doi pași prin WhatsApp.</p>
         </div>
 
         <div>

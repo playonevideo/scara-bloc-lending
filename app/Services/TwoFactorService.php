@@ -41,7 +41,7 @@ class TwoFactorService
 
         $this->sms->send($to, "Codul tău de verificare Vecini este: {$code}");
 
-        // In development (log driver) the code is not delivered as a real SMS,
+        // In development (log driver) the code is not delivered as a real message,
         // so surface it in the UI via the session flash data.
         if (config('sms.provider') === 'log') {
             session()->flash('sms_code', $code);

@@ -73,7 +73,7 @@ class UserResource extends Resource
                             ->label('Cont blocat')
                             ->helperText('Un cont blocat nu se mai poate autentifica.'),
                         Forms\Components\Toggle::make('two_factor_enabled')
-                            ->label('Autentificare în doi pași (SMS)'),
+                            ->label('Autentificare în doi pași (WhatsApp)'),
                         Forms\Components\Toggle::make('show_apartment')
                             ->label('Afișează numărul apartamentului')
                             ->default(true),

@@ -13,12 +13,12 @@
         <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
             <div class="flex items-center justify-between gap-4">
                 <div>
-                    <h2 class="font-semibold text-gray-900">Autentificare în doi pași (SMS)</h2>
+                    <h2 class="font-semibold text-gray-900">Autentificare în doi pași (WhatsApp)</h2>
                     <p class="mt-1 text-sm text-gray-500">
                         @if ($user->two_factor_enabled)
-                            Activă pentru {{ $user->phone }}. La autentificare vei primi un cod prin SMS.
+                            Activă pentru {{ $user->phone }}. La autentificare vei primi un cod prin WhatsApp.
                         @else
-                            Primește un cod prin SMS la fiecare autentificare.
+                            Primește un cod prin WhatsApp la fiecare autentificare.
                         @endif
                     </p>
                 </div>
@@ -89,8 +89,8 @@
                     <button type="submit" :disabled="remaining > 0"
                         class="text-sm font-medium transition"
                         :class="remaining > 0 ? 'cursor-not-allowed text-gray-400' : 'text-brand-600 hover:text-brand-700'">
-                        <span x-show="remaining > 0" x-cloak>Nu ai primit SMS-ul? Încearcă din nou în <span x-text="remaining"></span> s</span>
-                        <span x-show="remaining === 0" x-cloak>Nu ai primit SMS-ul? Trimite din nou</span>
+                        <span x-show="remaining > 0" x-cloak>Nu ai primit mesajul? Încearcă din nou în <span x-text="remaining"></span> s</span>
+                        <span x-show="remaining === 0" x-cloak>Nu ai primit mesajul? Trimite din nou</span>
                     </button>
                 </form>
             @endif

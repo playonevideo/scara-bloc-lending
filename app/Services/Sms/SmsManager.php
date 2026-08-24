@@ -15,7 +15,7 @@ class SmsManager
     public function provider(): SmsProvider
     {
         return match (config('sms.provider', 'log')) {
-            'twilio' => new TwilioSmsProvider(
+            'twilio' => new TwilioWhatsAppProvider(
                 (string) config('services.twilio.sid'),
                 (string) config('services.twilio.token'),
                 (string) config('services.twilio.from'),
