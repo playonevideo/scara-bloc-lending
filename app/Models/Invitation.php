@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Invitation extends Model
 {
@@ -57,5 +58,15 @@ class Invitation extends Model
     public function isUsable(): bool
     {
         return ! $this->isExpired() && ! $this->isUsed();
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Invitation $invitation) {
+            $invitation->code ??= strtoupper(Str::random(8));
+            $invitation->token ??= Str::random(40);
+            $invitation->expires_at ??= now()->addDays(7);
+            $invitation->invited_by ??= auth()->id();
+        });
     }
 }
