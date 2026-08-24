@@ -18,9 +18,13 @@ class NewMessage extends Notification
 
     public function toArray(object $notifiable): array
     {
+        $preview = $this->message->body
+            ? mb_strimwidth($this->message->body, 0, 80, '…')
+            : '📎 A trimis un fișier';
+
         return [
             'title' => 'Mesaj nou',
-            'message' => "{$this->message->sender->name}: ".mb_strimwidth($this->message->body, 0, 80, '…'),
+            'message' => "{$this->message->sender->name}: {$preview}",
             'conversation_id' => $this->message->conversation_id,
             'url' => route('conversations.show', $this->message->conversation_id),
         ];

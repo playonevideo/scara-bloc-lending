@@ -22,6 +22,12 @@ class EnsureUserIsActive
             return redirect()->route('login')->with('status', 'Contul tău a fost suspendat.');
         }
 
+        if ($user = Auth::user()) {
+            if (! $user->last_seen_at || $user->last_seen_at->diffInSeconds(now()) > 60) {
+                $user->forceFill(['last_seen_at' => now()])->saveQuietly();
+            }
+        }
+
         return $next($request);
     }
 }
