@@ -165,12 +165,10 @@
                         @endforeach
                     </div>
 
-                    <div x-show="previewUrl" x-cloak @click="previewUrl = null" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-                        <div @click.stop class="relative">
-                            <img :src="previewUrl" class="max-h-[75vh] max-w-[75vw] rounded-lg object-contain shadow-2xl">
-                            <button type="button" @click="previewUrl = null" class="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-white shadow-lg ring-2 ring-white hover:bg-gray-700" title="Închide" aria-label="Închide">
-                                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
+                    <div x-show="previewUrl" x-cloak @click="previewUrl = null" class="fixed inset-0 z-50 bg-black/80">
+                        <button type="button" @click="previewUrl = null" class="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white text-lg font-bold text-gray-800 shadow-lg hover:bg-gray-200" aria-label="Închide">✕</button>
+                        <div class="flex h-full w-full items-center justify-center p-4">
+                            <img :src="previewUrl" @click.stop class="max-h-[80vh] max-w-[80vw] rounded-lg object-contain shadow-2xl">
                         </div>
                     </div>
                 </div>
