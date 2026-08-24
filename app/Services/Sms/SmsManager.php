@@ -15,14 +15,6 @@ class SmsManager
     public function provider(): SmsProvider
     {
         return match (config('sms.provider', 'log')) {
-            'twilio' => new TwilioWhatsAppProvider(
-                (string) config('services.twilio.sid'),
-                (string) config('services.twilio.token'),
-                (string) config('services.twilio.from'),
-                (string) config('services.twilio.account_sid') ?: null,
-                filter_var(config('services.twilio.verify_ssl', true), FILTER_VALIDATE_BOOLEAN),
-                (string) config('services.twilio.content_sid') ?: null,
-            ),
             'meta' => new MetaWhatsAppProvider(
                 (string) config('services.meta_whatsapp.token'),
                 (string) config('services.meta_whatsapp.phone_number_id'),
