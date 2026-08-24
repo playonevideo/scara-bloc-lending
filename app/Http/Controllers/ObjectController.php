@@ -26,6 +26,10 @@ class ObjectController extends Controller
             $query->published();
         }
 
+        if ($request->filled('owner')) {
+            $query->where('owner_id', $request->integer('owner'));
+        }
+
         if ($search = $request->string('q')->toString()) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
@@ -58,7 +62,7 @@ class ObjectController extends Controller
             'categories' => Category::orderBy('sort_order')->get(),
             'floors' => range(0, 10),
             'conditions' => ObjectCondition::options(),
-            'filters' => $request->only(['q', 'category', 'status', 'floor', 'sort', 'mine']),
+            'filters' => $request->only(['q', 'category', 'status', 'floor', 'sort', 'mine', 'owner']),
         ]);
     }
 
