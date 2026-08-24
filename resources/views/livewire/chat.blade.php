@@ -98,9 +98,9 @@
         @endif
 
         <form wire:submit="send" class="flex items-center gap-2">
-            <label class="cursor-pointer rounded-xl p-2.5 text-gray-500 transition hover:bg-gray-100" title="Atașează un fișier">
+            <input id="chat-attachment" type="file" wire:model="attachment" class="hidden" accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.zip,.doc,.docx,.txt">
+            <label for="chat-attachment" class="cursor-pointer rounded-xl p-2.5 text-gray-500 transition hover:bg-gray-100" title="Atașează un fișier" wire:loading.class="animate-pulse" wire:target="attachment">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
-                <input type="file" wire:model="attachment" class="hidden">
             </label>
             <label for="body" class="sr-only">Mesaj</label>
             <input id="body" type="text" wire:model="body" placeholder="Scrie un mesaj..." autocomplete="off" @disabled($isBlocked)
