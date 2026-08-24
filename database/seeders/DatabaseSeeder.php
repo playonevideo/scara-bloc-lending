@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             $floor = Floor::factory()->for($staircase)->create(['number' => $floorNumber]);
             foreach (range(1, 4) as $apartmentNumber) {
                 $apartments->push(
-                    Apartment::factory()->for($floor)->create(['number' => $floorNumber * 4 + $apartmentNumber - 3])
+                    Apartment::factory()->for($floor)->create(['number' => $floorNumber * 4 + $apartmentNumber])
                 );
             }
         }

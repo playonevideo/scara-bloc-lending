@@ -74,9 +74,6 @@ class UserResource extends Resource
                             ->helperText('Un cont blocat nu se mai poate autentifica.'),
                         Forms\Components\Toggle::make('two_factor_enabled')
                             ->label('Autentificare în doi pași (WhatsApp)'),
-                        Forms\Components\Toggle::make('show_apartment')
-                            ->label('Afișează numărul apartamentului')
-                            ->default(true),
                         Forms\Components\Toggle::make('show_floor')
                             ->label('Afișează etajul')
                             ->default(true),

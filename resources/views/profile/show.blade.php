@@ -55,7 +55,6 @@
                 <p class="mb-2 text-sm font-medium text-gray-700">Confidențialitate — ce este vizibil pentru vecini</p>
                 <div class="space-y-2 rounded-xl bg-gray-50 p-4">
                     @foreach ([
-                        'show_apartment' => 'Numărul apartamentului',
                         'show_floor' => 'Etajul',
                         'show_phone' => 'Numărul de telefon',
                         'show_email' => 'Adresa de email',
