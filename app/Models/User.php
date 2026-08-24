@@ -31,6 +31,7 @@ class User extends Authenticatable implements FilamentUser, WebAuthnAuthenticata
         'role',
         'apartment_id',
         'two_factor_enabled',
+        'two_factor_secret',
         'is_blocked',
         'blocked_at',
         'show_apartment',
@@ -43,6 +44,7 @@ class User extends Authenticatable implements FilamentUser, WebAuthnAuthenticata
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
     ];
 
     protected function casts(): array

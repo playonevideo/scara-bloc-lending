@@ -34,10 +34,10 @@ class TwoFactorChallengeController extends Controller
         }
 
         $validated = $request->validate([
-            'code' => ['required', 'string', 'digits:'.config('sms.code.length', 6)],
+            'code' => ['required', 'string', 'digits:6'],
         ]);
 
-        if (! $twoFactor->verify($user, $validated['code'])) {
+        if (! $user->two_factor_secret || ! $twoFactor->verify($user->two_factor_secret, $validated['code'])) {
             throw ValidationException::withMessages([
                 'code' => 'Codul introdus este invalid sau a expirat.',
             ]);
@@ -51,23 +51,5 @@ class TwoFactorChallengeController extends Controller
         return $user->isAdmin()
             ? redirect('/admin')
             : redirect()->intended(route('dashboard'));
-    }
-
-    public function resend(Request $request, TwoFactorService $twoFactor): RedirectResponse
-    {
-        $userId = $request->session()->get('auth.two_factor_user_id');
-        $user = $userId ? User::find($userId) : null;
-
-        if (! $user) {
-            return redirect()->route('login');
-        }
-
-        try {
-            $twoFactor->sendCode($user);
-
-            return back()->with('status', 'Un nou cod a fost trimis pe telefonul tău.');
-        } catch (\RuntimeException $e) {
-            throw ValidationException::withMessages(['code' => $e->getMessage()]);
-        }
     }
 }

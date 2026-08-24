@@ -42,7 +42,6 @@ Route::middleware('guest')->group(function () {
 
     Route::get('two-factor/challenge', [TwoFactorChallengeController::class, 'create'])->name('two-factor.challenge');
     Route::post('two-factor/challenge', [TwoFactorChallengeController::class, 'store'])->name('two-factor.verify');
-    Route::post('two-factor/resend', [TwoFactorChallengeController::class, 'resend'])->name('two-factor.resend');
 });
 
 /*
@@ -110,13 +109,11 @@ Route::middleware(['auth', 'active', 'resident'])->group(function () {
     Route::get('/profil', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/setari/securitate', [SecurityController::class, 'show'])->name('security.show');
-    Route::post('/setari/securitate/2fa', [SecurityController::class, 'toggleTwoFactor'])->name('security.toggle-2fa');
+    Route::post('/setari/securitate/2fa/setup', [SecurityController::class, 'setupTwoFactor'])->name('security.two-factor.setup');
+    Route::post('/setari/securitate/2fa/confirm', [SecurityController::class, 'confirmTwoFactor'])->name('security.two-factor.confirm');
+    Route::post('/setari/securitate/2fa/disable', [SecurityController::class, 'disableTwoFactor'])->name('security.two-factor.disable');
     Route::post('/setari/securitate/parola', [SecurityController::class, 'updatePassword'])->name('security.update-password');
     Route::post('/setari/securitate/passkeys/{credential}', [SecurityController::class, 'removePasskey'])->name('security.remove-passkey');
-    Route::post('/setari/securitate/telefon', [SecurityController::class, 'changePhone'])->name('security.change-phone');
-    Route::post('/setari/securitate/telefon/verifica', [SecurityController::class, 'verifyPhoneChange'])->name('security.verify-phone');
-    Route::post('/setari/securitate/telefon/retrimite', [SecurityController::class, 'resendPhoneCode'])->name('security.resend-phone-code');
-    Route::post('/setari/securitate/telefon/sterge', [SecurityController::class, 'removePhone'])->name('security.remove-phone');
 
     // Favorites
     Route::get('/favorite', [FavoriteController::class, 'index'])->name('favorites.index');

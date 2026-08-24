@@ -2,101 +2,39 @@
 
 namespace App\Services;
 
-use App\Models\TwoFactorChallenge;
 use App\Models\User;
-use App\Services\Sms\SmsManager;
-use Illuminate\Support\Facades\Hash;
-use RuntimeException;
+use PragmaRX\Google2FA\Google2FA;
 
 class TwoFactorService
 {
-    public function __construct(private readonly SmsManager $sms) {}
-
     /**
-     * Generate and send a one-time code.
-     *
-     * When $phone is given it is used instead of the user's current phone,
-     * which is used for confirming a phone number change.
-     *
-     * @throws RuntimeException when the phone is missing or the user is throttled.
+     * Generate a new TOTP secret key.
      */
-    public function sendCode(User $user, ?string $phone = null): string
+    public function generateSecretKey(): string
     {
-        $to = $phone ?? $user->phone;
-
-        if (! $to) {
-            throw new RuntimeException('Nu există un număr de telefon asociat contului.');
-        }
-
-        $this->assertNotThrottled($user);
-
-        $length = (int) config('sms.code.length', 6);
-        $code = (string) random_int(10 ** ($length - 1), (10 ** $length) - 1);
-
-        TwoFactorChallenge::create([
-            'user_id' => $user->id,
-            'code_hash' => Hash::make($code),
-            'expires_at' => now()->addMinutes((int) config('sms.code.expires_minutes', 10)),
-        ]);
-
-        $this->sms->send($to, "Codul tău de verificare Vecini este: {$code}", ['1' => $code]);
-
-        // In development (log driver) the code is not delivered as a real message,
-        // so surface it in the UI via the session flash data.
-        if (config('sms.provider') === 'log') {
-            session()->flash('sms_code', $code);
-        }
-
-        return $code;
+        return (new Google2FA)->generateSecretKey();
     }
 
     /**
-     * Verify a code and mark it as consumed on success.
+     * Build the otpauth:// URI used to render the QR code.
      */
-    public function verify(User $user, string $code): bool
+    public function qrCodeUrl(User $user, string $secret): string
     {
-        $challenge = TwoFactorChallenge::query()
-            ->where('user_id', $user->id)
-            ->whereNull('consumed_at')
-            ->where('expires_at', '>', now())
-            ->latest()
-            ->first();
+        $issuer = config('app.name', 'Vecini');
+        $label = rawurlencode($issuer.':'.$user->email);
 
-        if (! $challenge) {
-            return false;
-        }
-
-        $maxAttempts = (int) config('sms.code.max_attempts', 5);
-
-        if ($challenge->attempts >= $maxAttempts) {
-            return false;
-        }
-
-        if (! Hash::check($code, $challenge->code_hash)) {
-            $challenge->increment('attempts');
-
-            return false;
-        }
-
-        $challenge->update(['consumed_at' => now()]);
-
-        return true;
+        return "otpauth://totp/{$label}?secret={$secret}&issuer=".rawurlencode($issuer);
     }
 
     /**
-     * Prevent spam by throttling how often a new code can be requested.
+     * Verify a 6-digit TOTP code against a secret.
      */
-    private function assertNotThrottled(User $user): void
+    public function verify(string $secret, string $code): bool
     {
-        $throttleSeconds = (int) config('sms.code.throttle_seconds', 60);
-
-        $recent = TwoFactorChallenge::query()
-            ->where('user_id', $user->id)
-            ->where('created_at', '>', now()->subSeconds($throttleSeconds))
-            ->exists();
-
-        if ($recent) {
-            throw new RuntimeException('Vă rugăm să așteptați înainte de a solicita un nou cod.');
+        try {
+            return (new Google2FA)->verifyKey($secret, $code);
+        } catch (\Throwable) {
+            return false;
         }
     }
 }
