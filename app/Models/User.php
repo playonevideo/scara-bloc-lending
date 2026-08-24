@@ -133,17 +133,11 @@ class User extends Authenticatable implements FilamentUser, WebAuthnAuthenticata
      */
     public function locationLabel(): string
     {
-        $parts = [];
-
         if ($this->show_floor && $this->apartment?->floor) {
-            $parts[] = 'Etajul '.$this->apartment->floor->number;
+            return 'Etajul '.$this->apartment->floor->number;
         }
 
-        if ($this->show_apartment && $this->apartment) {
-            $parts[] = 'Ap. '.$this->apartment->number;
-        }
-
-        return $parts ? implode(' · ', $parts) : 'Locatar';
+        return 'Locatar';
     }
 
     /**

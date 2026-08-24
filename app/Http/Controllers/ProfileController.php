@@ -25,7 +25,6 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:32'],
-            'show_apartment' => ['sometimes', 'boolean'],
             'show_floor' => ['sometimes', 'boolean'],
             'show_phone' => ['sometimes', 'boolean'],
             'show_email' => ['sometimes', 'boolean'],
@@ -34,7 +33,6 @@ class ProfileController extends Controller
         $user->update([
             'name' => $validated['name'],
             'phone' => $validated['phone'] ?? null,
-            'show_apartment' => $request->boolean('show_apartment'),
             'show_floor' => $request->boolean('show_floor'),
             'show_phone' => $request->boolean('show_phone'),
             'show_email' => $request->boolean('show_email'),
