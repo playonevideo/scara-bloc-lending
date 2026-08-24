@@ -15,6 +15,14 @@ trait HasLabels
     }
 
     /**
+     * Filament display label contract.
+     */
+    public function getLabel(): string
+    {
+        return $this->label();
+    }
+
+    /**
      * Options suitable for a select input: [value => label].
      */
     public static function options(): array

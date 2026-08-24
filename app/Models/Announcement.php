@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
+use App\Notifications\AnnouncementPublished;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -19,5 +21,14 @@ class Announcement extends Model
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    protected static function booted(): void
+    {
+        static::created(function (Announcement $announcement) {
+            User::query()
+                ->where('role', Role::Resident->value)
+                ->each->notify(new AnnouncementPublished($announcement));
+        });
     }
 }
