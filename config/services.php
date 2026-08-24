@@ -33,6 +33,7 @@ return [
         'token' => env('TWILIO_TOKEN'),
         'from' => env('TWILIO_FROM'),
         'account_sid' => env('TWILIO_ACCOUNT_SID'),
+        'verify_ssl' => env('TWILIO_VERIFY_SSL', true),
     ],
 
     'slack' => [

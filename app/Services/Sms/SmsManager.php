@@ -20,6 +20,7 @@ class SmsManager
                 (string) config('services.twilio.token'),
                 (string) config('services.twilio.from'),
                 (string) config('services.twilio.account_sid') ?: null,
+                filter_var(config('services.twilio.verify_ssl', true), FILTER_VALIDATE_BOOLEAN),
             ),
             'log' => new LogSmsProvider,
             default => throw new RuntimeException('Unknown SMS provider: '.config('sms.provider')),
