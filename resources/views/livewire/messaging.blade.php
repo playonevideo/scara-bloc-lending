@@ -1,8 +1,18 @@
-<div class="flex h-[calc(100vh-8rem)] overflow-hidden bg-white md:h-[calc(100vh-4rem)]">
+<style>
+    .msg-sidebar { width: 100%; }
+    @media (min-width: 768px) {
+        .msg-sidebar { width: var(--sidebar-w, 280px); }
+    }
+</style>
+
+<div x-data="{ sidebarWidth: 280, dragging: false }"
+    x-on:mousemove.window="if (dragging) sidebarWidth = Math.min(560, Math.max(220, $event.clientX))"
+    x-on:mouseup.window="dragging = false"
+    :class="{ 'select-none': dragging }"
+    class="flex h-[calc(100vh-8rem)] overflow-hidden bg-white md:h-[calc(100vh-4rem)]">
     {{-- Conversation list --}}
-    <div @class([
-        'flex h-full flex-col border-r border-gray-100',
-        'w-full md:w-64',
+    <div :style="`--sidebar-w: ${sidebarWidth}px`" @class([
+        'msg-sidebar flex h-full shrink-0 flex-col border-r border-gray-100',
         'hidden md:flex' => $activeId,
     ])>
         <div class="border-b border-gray-100 px-4 py-3">
@@ -47,6 +57,8 @@
             @endforelse
         </div>
     </div>
+
+    <div x-on:mousedown.prevent="dragging = true" class="hidden w-1.5 shrink-0 cursor-col-resize bg-gray-200 transition hover:bg-brand-400 md:block" title="Trage pentru a redimensiona"></div>
 
     {{-- Chat pane --}}
     <div @class([
