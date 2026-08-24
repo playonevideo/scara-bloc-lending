@@ -111,8 +111,9 @@ class UserResource extends Resource
                         Role::Admin => 'warning',
                         Role::Resident => 'success',
                     }),
-                Tables\Columns\TextColumn::make('apartment.fullLabel')
+                Tables\Columns\TextColumn::make('apartment.number')
                     ->label('Apartament')
+                    ->getStateUsing(fn ($record) => $record->apartment?->fullLabel() ?? '—')
                     ->toggleable(),
                 Tables\Columns\IconColumn::make('is_blocked')
                     ->label('Blocat')
