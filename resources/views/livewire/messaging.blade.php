@@ -1,8 +1,8 @@
-<div class="flex h-full overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+<div class="flex h-full overflow-hidden bg-white">
     {{-- Conversation list --}}
     <div @class([
         'flex h-full flex-col border-r border-gray-100',
-        'w-full md:w-80 lg:w-96',
+        'w-full md:w-64',
         'hidden md:flex' => $activeId,
     ])>
         <div class="border-b border-gray-100 px-4 py-3">
