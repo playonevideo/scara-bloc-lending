@@ -37,6 +37,15 @@ return [
         'verify_ssl' => env('TWILIO_VERIFY_SSL', true),
     ],
 
+    'meta_whatsapp' => [
+        'token' => env('WHATSAPP_TOKEN'),
+        'phone_number_id' => env('WHATSAPP_PHONE_NUMBER_ID'),
+        'template_name' => env('WHATSAPP_TEMPLATE_NAME'),
+        'language' => env('WHATSAPP_TEMPLATE_LANGUAGE', 'ro'),
+        'api_version' => env('WHATSAPP_API_VERSION', 'v21.0'),
+        'verify_ssl' => env('WHATSAPP_VERIFY_SSL', true),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

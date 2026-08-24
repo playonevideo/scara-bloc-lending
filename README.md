@@ -147,15 +147,34 @@ Migrațiile creează toate tabelele (utilizatori, clădiri, scări, etaje, apart
 
 ---
 
-## Configurarea serviciului WhatsApp (Twilio)
+## Configurarea serviciului WhatsApp (2FA)
 
-1. Creează un cont pe [Twilio](https://www.twilio.com/) și obține `Account SID` și `Auth Token` (sau creează un API Key — `SK...` + secret).
-2. Activează WhatsApp în Twilio Console → **Messaging → Try it out → Send a WhatsApp message** și obține numărul de trimitere (sandbox `+14155238886` sau numărul tău WhatsApp Business).
-3. Completează în `.env`: `SMS_PROVIDER=twilio`, `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_ACCOUNT_SID` (dacă folosești API Key) și `TWILIO_FROM` (numărul de trimitere WhatsApp).
+Aplicația trimite codurile de verificare prin WhatsApp. Poți alege între două provider-e (via `SMS_PROVIDER`):
+
+### Meta WhatsApp Cloud API (recomandat, gratuit)
+
+1. Creează un cont pe [Meta for Developers](https://developers.facebook.com/) și o aplicație.
+2. Adaugă produsul **WhatsApp** și configurează un număr de telefon (WhatsApp Business).
+3. Obține:
+   - `WHATSAPP_TOKEN` — token de acces permanent (System User / token).
+   - `WHATSAPP_PHONE_NUMBER_ID` — ID-ul numărului de telefon.
+4. Creează un șablon de mesaj (tip „Transactional") în **Meta Business Manager → WhatsApp Manager → Message templates**, cu conținutul: `Codul tău de verificare Vecini este: {{1}}` (sau doar `{{1}}`).
+5. Completează în `.env`:
+   ```dotenv
+   SMS_PROVIDER=meta
+   WHATSAPP_TOKEN=...
+   WHATSAPP_PHONE_NUMBER_ID=...
+   WHATSAPP_TEMPLATE_NAME=...   # numele șablonului
+   WHATSAPP_TEMPLATE_LANGUAGE=ro
+   ```
+
+### Twilio WhatsApp (alternativă)
+
+1. Obține `Account SID` și `Auth Token` (sau un API Key `SK...` + secret) din [Twilio](https://www.twilio.com/).
+2. Configurează un număr de trimitere WhatsApp (sandbox `+14155238886` sau WhatsApp Business) și un Content Template (SID `HX...`).
+3. Completează în `.env`: `SMS_PROVIDER=twilio`, `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_ACCOUNT_SID`, `TWILIO_FROM`, `TWILIO_CONTENT_SID`.
 
 Pentru dezvoltare, `SMS_PROVIDER=log` scrie codul de verificare în log-ul Laravel (`storage/logs/laravel.log`) în loc să trimită mesajul WhatsApp real.
-
-> Notă: destinatarul trebuie să fi trimis anterior un mesaj către numărul de trimitere (opt-in), cerință a sandbox-ului Twilio WhatsApp.
 
 Codul de verificare: expiră, are limită de încercări, rate limiting și nu poate fi reutilizat (vezi `app/Services/TwoFactorService.php`).
 

@@ -7,6 +7,8 @@ use Twilio\Rest\Client;
 
 class TwilioWhatsAppProvider implements SmsProvider
 {
+    use NormalizesPhoneNumbers;
+
     public function __construct(
         private readonly string $sid,
         private readonly string $token,
@@ -41,7 +43,7 @@ class TwilioWhatsAppProvider implements SmsProvider
             $params['body'] = $message;
         }
 
-        $client->messages->create('whatsapp:'.$this->normalize($to), $params);
+        $client->messages->create('whatsapp:'.$this->normalizePhone($to), $params);
     }
 
     /**
@@ -58,19 +60,5 @@ class TwilioWhatsAppProvider implements SmsProvider
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
         ]);
-    }
-
-    /**
-     * Convert Romanian local numbers ("07...") to E.164 ("+407...").
-     */
-    private function normalize(string $phone): string
-    {
-        $phone = trim($phone);
-
-        if (preg_match('/^0(\d{9})$/', $phone)) {
-            return '+40'.substr($phone, 1);
-        }
-
-        return $phone;
     }
 }
