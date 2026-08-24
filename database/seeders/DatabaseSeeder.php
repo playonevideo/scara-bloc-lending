@@ -90,6 +90,10 @@ class DatabaseSeeder extends Seeder
         $this->seedLoans($objects, $residents);
         $this->seedConversations($residents);
         $this->seedReviews($objects, $residents);
+
+        $this->call([
+            ObjectImageSeeder::class,
+        ]);
     }
 
     private function seedLoans($objects, $residents): void
