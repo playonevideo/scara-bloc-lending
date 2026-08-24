@@ -4,7 +4,7 @@
 
 @section('content')
     <h1 class="text-xl font-semibold text-gray-900">Verificare în doi pași</h1>
-    <p class="mt-1 text-sm text-gray-500">Am trimis un cod prin SMS pe numărul tău de telefon. Introdu-l mai jos.</p>
+    <p class="mt-1 text-sm text-gray-500">Am trimis un cod prin WhatsApp pe numărul tău de telefon. Introdu-l mai jos.</p>
 
     @if (session('sms_code'))
         <div class="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800 ring-1 ring-amber-200">
@@ -35,8 +35,8 @@
         <button type="submit" :disabled="remaining > 0"
             class="text-sm font-medium transition"
             :class="remaining > 0 ? 'cursor-not-allowed text-gray-400' : 'text-brand-600 hover:text-brand-700'">
-            <span x-show="remaining > 0" x-cloak>Nu ai primit codul? Încearcă din nou în <span x-text="remaining"></span> s</span>
-            <span x-show="remaining === 0" x-cloak>Nu ai primit codul? Trimite din nou</span>
+            <span x-show="remaining > 0" x-cloak>Nu ai primit mesajul? Încearcă din nou în <span x-text="remaining"></span> s</span>
+            <span x-show="remaining === 0" x-cloak>Nu ai primit mesajul? Trimite din nou</span>
         </button>
     </form>
 @endsection

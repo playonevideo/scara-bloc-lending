@@ -4,7 +4,7 @@ namespace App\Services\Sms;
 
 use Twilio\Rest\Client;
 
-class TwilioSmsProvider implements SmsProvider
+class TwilioWhatsAppProvider implements SmsProvider
 {
     public function __construct(
         private readonly string $sid,
@@ -21,8 +21,8 @@ class TwilioSmsProvider implements SmsProvider
             ? new Client($this->sid, $this->token, $this->accountSid)
             : new Client($this->sid, $this->token);
 
-        $client->messages->create($this->normalize($to), [
-            'from' => $this->from,
+        $client->messages->create('whatsapp:'.$this->normalize($to), [
+            'from' => 'whatsapp:'.$this->from,
             'body' => $message,
         ]);
     }

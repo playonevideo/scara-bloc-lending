@@ -8,6 +8,6 @@ class LogSmsProvider implements SmsProvider
 {
     public function send(string $to, string $message): void
     {
-        Log::info('[SMS] To: '.$to.' | '.$message);
+        Log::info('[2FA] To: '.$to.' | '.$message);
     }
 }

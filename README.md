@@ -17,7 +17,7 @@ Scopul este încurajarea colaborării între vecini, reducerea cumpărării inut
 - **Sistem de rating** (1–5 stele) și reputație a locatarilor.
 - **Raportare și moderare** (obiecte, descrieri, spam, comportament abuziv, mesaje).
 - **Panou de administrare Filament** complet separat de interfața locatarului, cu statistici, grafice și jurnal de audit.
-- **Autentificare modernă**: parole + WebAuthn / Passkeys (amprentă, Face ID, Windows Hello) + autentificare în doi pași prin SMS.
+- **Autentificare modernă**: parole + WebAuthn / Passkeys (amprentă, Face ID, Windows Hello) + autentificare în doi pași prin WhatsApp.
 - **Sistem de invitații** — comunitatea este privată; conturile se creează doar prin invitație.
 - **Roluri**: Administrator și Locatar.
 - **Confidențialitate (GDPR)**: controlul vizibilității datelor, minimizarea datelor, anonimizare la ștergere.
@@ -32,7 +32,7 @@ Scopul este încurajarea colaborării între vecini, reducerea cumpărării inut
 - **ORM**: Eloquent
 - **Admin**: Filament 3 (Resources, Tables, Forms, Actions, Notifications, Widgets)
 - **Frontend locatar**: Blade + Livewire 3 + Alpine.js + Tailwind CSS 4
-- **Autentificare**: [laragear/webauthn](https://github.com/Laragear/WebAuthn) (WebAuthn / Passkeys), [Twilio SDK](https://www.twilio.com/) (SMS 2FA)
+- **Autentificare**: [laragear/webauthn](https://github.com/Laragear/WebAuthn) (WebAuthn / Passkeys), [Twilio SDK](https://www.twilio.com/) (2FA prin WhatsApp)
 - **QR**: simplesoftwareio/simple-qrcode
 - **Teste**: PHPUnit
 
@@ -100,11 +100,12 @@ DB_PASSWORD=
 # DB_CONNECTION=sqlite
 # DB_DATABASE=/cale/absoluta/catre/database/database.sqlite
 
-# --- SMS / 2FA (Twilio) ---
+# --- WhatsApp / 2FA (Twilio) ---
 SMS_PROVIDER=twilio      # "twilio" sau "log" (dezvoltare)
 TWILIO_SID=
 TWILIO_TOKEN=
-TWILIO_FROM=+15555555555
+TWILIO_ACCOUNT_SID=
+TWILIO_FROM=+14155238886 # numărul de trimitere WhatsApp (sandbox sau WhatsApp Business)
 
 # Parametri codului de verificare
 SMS_CODE_LENGTH=6
@@ -146,13 +147,15 @@ Migrațiile creează toate tabelele (utilizatori, clădiri, scări, etaje, apart
 
 ---
 
-## Configurarea serviciului SMS (Twilio)
+## Configurarea serviciului WhatsApp (Twilio)
 
-1. Creează un cont pe [Twilio](https://www.twilio.com/) și obține `Account SID` și `Auth Token`.
-2. Cumpără/activează un număr de telefon capabil să trimită SMS.
-3. Completează în `.env`: `SMS_PROVIDER=twilio`, `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_FROM`.
+1. Creează un cont pe [Twilio](https://www.twilio.com/) și obține `Account SID` și `Auth Token` (sau creează un API Key — `SK...` + secret).
+2. Activează WhatsApp în Twilio Console → **Messaging → Try it out → Send a WhatsApp message** și obține numărul de trimitere (sandbox `+14155238886` sau numărul tău WhatsApp Business).
+3. Completează în `.env`: `SMS_PROVIDER=twilio`, `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_ACCOUNT_SID` (dacă folosești API Key) și `TWILIO_FROM` (numărul de trimitere WhatsApp).
 
-Pentru dezvoltare, `SMS_PROVIDER=log` scrie codul de verificare în log-ul Laravel (`storage/logs/laravel.log`) în loc să trimită SMS real.
+Pentru dezvoltare, `SMS_PROVIDER=log` scrie codul de verificare în log-ul Laravel (`storage/logs/laravel.log`) în loc să trimită mesajul WhatsApp real.
+
+> Notă: destinatarul trebuie să fi trimis anterior un mesaj către numărul de trimitere (opt-in), cerință a sandbox-ului Twilio WhatsApp.
 
 Codul de verificare: expiră, are limită de încercări, rate limiting și nu poate fi reutilizat (vezi `app/Services/TwoFactorService.php`).
 
@@ -220,7 +223,7 @@ După rularea `php artisan migrate:fresh --seed`, sunt disponibile:
 |---------------|------------------|-----------|
 | Administrator | `admin@vecini.ro` | `password` |
 
-> Administratorul demo are autentificarea în doi pași activă pe numărul `0767965218`. Fiecare locatar își poate schimba numărul de telefon pentru 2FA din **Profil → Securitate**, cu confirmare prin SMS pe noul număr și parola contului. În dezvoltare (`SMS_PROVIDER=log`), codul de verificare este scris în `storage/logs/laravel.log`.
+> Administratorul demo are autentificarea în doi pași activă pe numărul `0767965218`. Fiecare locatar își poate schimba numărul de telefon pentru 2FA din **Profil → Securitate**, cu confirmare prin WhatsApp pe noul număr și parola contului. În dezvoltare (`SMS_PROVIDER=log`), codul de verificare este scris în `storage/logs/laravel.log`.
 
 Locatarii demo au emailuri de forma `nume@vecini.ro` (ex. `andrei@vecini.ro`) și parola `password`.
 
@@ -245,7 +248,7 @@ Variante de hosting recomandate: **Laravel Forge**, **Laravel Cloud**, un **VPS*
 Pași generali:
 
 1. Clonează repository-ul pe server și `composer install --no-dev --optimize-autoloader`.
-2. Configurează `.env` (cheie, MySQL, SMS, WebAuthn, mail).
+2. Configurează `.env` (cheie, MySQL, WhatsApp/Twilio, WebAuthn, mail).
 3. `php artisan key:generate` și `php artisan migrate --force --seed`.
 4. `php artisan storage:link`.
 5. `npm ci && npm run build`.
