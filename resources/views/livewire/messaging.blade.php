@@ -170,17 +170,28 @@
                 </div>
             @endif
 
-            <div class="border-t border-gray-100 p-3">
+            <div class="border-t border-gray-100 p-3"
+                x-data="{ uploading: false, progress: 0 }"
+                x-on:livewire-upload-start="uploading = true; progress = 0"
+                x-on:livewire-upload-finish="uploading = false; progress = 100"
+                x-on:livewire-upload-progress="progress = $event.detail.progress"
+                x-on:livewire-upload-error="uploading = false">
+
                 @if ($isBlocked)
                     <p class="mb-2 text-center text-xs text-gray-500">Nu poți trimite mesaje acestui utilizator.</p>
                 @endif
 
-                <form wire:submit="send" class="relative flex items-center gap-2"
-                    x-data="{ uploading: false, progress: 0 }"
-                    x-on:livewire-upload-start="uploading = true; progress = 0"
-                    x-on:livewire-upload-finish="uploading = false; progress = 100"
-                    x-on:livewire-upload-progress="progress = $event.detail.progress"
-                    x-on:livewire-upload-error="uploading = false">
+                <div x-show="uploading" x-cloak class="mb-2">
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span>Se încarcă fișierele…</span>
+                        <span x-text="Math.round(progress) + '%'"></span>
+                    </div>
+                    <div class="mt-1 h-2 overflow-hidden rounded-full bg-gray-100">
+                        <div class="h-full rounded-full bg-brand-600 transition-all duration-150" :style="`width: ${progress}%`"></div>
+                    </div>
+                </div>
+
+                <form wire:submit="send" class="flex items-center gap-2">
                     <input id="chat-attachments" type="file" wire:model="attachments" multiple class="hidden" accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.zip,.doc,.docx,.txt">
                     <label for="chat-attachments" class="cursor-pointer rounded-xl p-2.5 text-gray-500 transition hover:bg-gray-100" title="Atașează fișiere">
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
@@ -193,10 +204,6 @@
                         class="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 disabled:opacity-50">
                         Trimite
                     </button>
-
-                    <div x-show="uploading" x-cloak class="absolute inset-x-0 bottom-0 h-1 bg-gray-100">
-                        <div class="h-full bg-brand-600 transition-all" :style="`width: ${progress}%`"></div>
-                    </div>
                 </form>
 
                 @error('body') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
