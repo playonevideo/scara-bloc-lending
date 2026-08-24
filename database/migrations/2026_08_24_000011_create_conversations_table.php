@@ -1,0 +1,24 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('conversations', function (Blueprint $table) {
+            $table->id();
+            $table->string('subject')->nullable();
+            $table->foreignId('object_id')->nullable()->constrained('objects')->nullOnDelete();
+            $table->foreignId('loan_id')->nullable()->constrained()->nullOnDelete();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('conversations');
+    }
+};
