@@ -37,6 +37,49 @@
         </div>
 
         <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+            <h2 class="font-semibold text-gray-900">Numărul de telefon pentru 2FA</h2>
+            <p class="mt-1 text-sm text-gray-500">Numărul curent: <strong>{{ $user->phone ?? '—' }}</strong></p>
+
+            <form method="POST" action="{{ route('security.change-phone') }}" class="mt-4 space-y-4">
+                @csrf
+                <div>
+                    <label for="new_phone" class="block text-sm font-medium text-gray-700">Număr nou</label>
+                    <input id="new_phone" type="tel" name="new_phone" required placeholder="ex. 07xx xxx xxx"
+                        class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500">
+                    @error('new_phone')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="current_password" class="block text-sm font-medium text-gray-700">Parola contului</label>
+                    <input id="current_password" type="password" name="current_password" required
+                        class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500">
+                </div>
+                <button type="submit" class="rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700">
+                    Trimite codul de confirmare
+                </button>
+            </form>
+
+            @if (session('auth.pending_phone'))
+                <form method="POST" action="{{ route('security.verify-phone') }}" class="mt-4 space-y-4 rounded-xl bg-gray-50 p-4">
+                    @csrf
+                    <p class="text-sm text-gray-600">Am trimis un cod pe <strong>{{ session('auth.pending_phone') }}</strong>.</p>
+                    <div>
+                        <label for="code" class="block text-sm font-medium text-gray-700">Cod de verificare</label>
+                        <input id="code" type="text" name="code" inputmode="numeric" maxlength="6" required
+                            class="mt-1 block w-full rounded-xl border-gray-300 text-center text-xl tracking-[0.5em] shadow-sm focus:border-brand-500 focus:ring-brand-500">
+                        @error('code')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <button type="submit" class="rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700">
+                        Confirmă noul număr
+                    </button>
+                </form>
+            @endif
+        </div>
+
+        <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
             <h2 class="font-semibold text-gray-900">Chei de acces (Passkeys)</h2>
             <p class="mt-1 text-sm text-gray-500">Autentifică-te rapid și sigur cu amprenta, Face ID sau Windows Hello. Poți înregistra mai multe chei de acces.</p>
 

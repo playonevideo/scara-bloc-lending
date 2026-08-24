@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TwoFactorService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -50,6 +51,62 @@ class SecurityController extends Controller
         $user->update(['password' => Hash::make($validated['password'])]);
 
         return back()->with('status', 'Parola a fost schimbată.');
+    }
+
+    public function changePhone(Request $request, TwoFactorService $twoFactor): RedirectResponse
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'new_phone' => ['required', 'string', 'regex:/^[0-9+]{9,20}$/'],
+            'current_password' => ['required', 'current_password'],
+        ]);
+
+        if ($validated['new_phone'] === $user->phone) {
+            throw ValidationException::withMessages([
+                'new_phone' => 'Noul număr este identic cu cel actual.',
+            ]);
+        }
+
+        try {
+            $twoFactor->sendCode($user, $validated['new_phone']);
+        } catch (\RuntimeException $e) {
+            throw ValidationException::withMessages(['new_phone' => $e->getMessage()]);
+        }
+
+        $request->session()->put('auth.pending_phone', $validated['new_phone']);
+
+        return back()->with('status', 'Am trimis un cod de verificare pe noul număr. Introdu codul mai jos.');
+    }
+
+    public function verifyPhoneChange(Request $request, TwoFactorService $twoFactor): RedirectResponse
+    {
+        $user = $request->user();
+
+        $pendingPhone = $request->session()->get('auth.pending_phone');
+
+        if (! $pendingPhone) {
+            return back()->with('status', 'Introdu mai întâi noul număr de telefon.');
+        }
+
+        $validated = $request->validate([
+            'code' => ['required', 'string', 'digits:'.config('sms.code.length', 6)],
+        ]);
+
+        if (! $twoFactor->verify($user, $validated['code'])) {
+            throw ValidationException::withMessages([
+                'code' => 'Codul introdus este invalid sau a expirat.',
+            ]);
+        }
+
+        $user->update([
+            'phone' => $pendingPhone,
+            'phone_verified_at' => now(),
+        ]);
+
+        $request->session()->forget('auth.pending_phone');
+
+        return back()->with('status', 'Numărul de telefon a fost actualizat cu succes.');
     }
 
     public function removePasskey(Request $request, string $credential): RedirectResponse

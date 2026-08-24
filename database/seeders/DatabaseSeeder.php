@@ -42,7 +42,9 @@ class DatabaseSeeder extends Seeder
         User::factory()->admin()->create([
             'name' => 'Administrator',
             'email' => 'admin@vecini.ro',
-            'phone' => '+40700000001',
+            'phone' => '0767965218',
+            'phone_verified_at' => now(),
+            'two_factor_enabled' => true,
         ]);
 
         $residents = collect();
