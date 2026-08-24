@@ -19,7 +19,7 @@ Scopul este încurajarea colaborării între vecini, reducerea cumpărării inut
 - **Panou de administrare Filament** complet separat de interfața locatarului, cu statistici, grafice și jurnal de audit.
 - **Autentificare modernă**: parole + WebAuthn / Passkeys (amprentă, Face ID, Windows Hello) + autentificare în doi pași prin SMS.
 - **Sistem de invitații** — comunitatea este privată; conturile se creează doar prin invitație.
-- **Roluri**: Super Administrator, Administrator și Locatar.
+- **Roluri**: Administrator și Locatar.
 - **Confidențialitate (GDPR)**: controlul vizibilității datelor, minimizarea datelor, anonimizare la ștergere.
 - **Responsive mobile-first** și accesibil.
 
@@ -216,10 +216,9 @@ npm run build              # compilează activele pentru producție
 
 După rularea `php artisan migrate:fresh --seed`, sunt disponibile:
 
-| Rol               | Email            | Parolă    |
-|-------------------|------------------|-----------|
-| Super Administrator | `admin@vecini.ro`  | `password` |
-| Administrator      | `admin2@vecini.ro` | `password` |
+| Rol           | Email            | Parolă    |
+|---------------|------------------|-----------|
+| Administrator | `admin@vecini.ro` | `password` |
 
 Locatarii demo au emailuri de forma `nume@vecini.ro` (ex. `andrei@vecini.ro`) și parola `password`.
 

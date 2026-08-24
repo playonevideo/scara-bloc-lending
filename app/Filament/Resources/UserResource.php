@@ -107,7 +107,6 @@ class UserResource extends Resource
                     ->label('Rol')
                     ->badge()
                     ->color(fn (Role $state) => match ($state) {
-                        Role::SuperAdmin => 'danger',
                         Role::Admin => 'warning',
                         Role::Resident => 'success',
                     }),

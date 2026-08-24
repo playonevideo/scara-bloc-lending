@@ -30,4 +30,18 @@ class AdminAccessTest extends TestCase
 
         $this->actingAs($resident)->get('/admin/users')->assertForbidden();
     }
+
+    public function test_admin_is_redirected_away_from_resident_dashboard(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->get('/dashboard')->assertRedirect('/admin');
+    }
+
+    public function test_admin_is_redirected_away_from_marketplace(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->get('/obiecte')->assertRedirect('/admin');
+    }
 }

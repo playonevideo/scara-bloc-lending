@@ -48,7 +48,9 @@ class TwoFactorChallengeController extends Controller
         Auth::login($user, true);
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard'));
+        return $user->isAdmin()
+            ? redirect('/admin')
+            : redirect()->intended(route('dashboard'));
     }
 
     public function resend(Request $request, TwoFactorService $twoFactor): RedirectResponse

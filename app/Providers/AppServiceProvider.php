@@ -15,7 +15,6 @@ use App\Models\Staircase;
 use App\Models\User;
 use App\Observers\AuditingObserver;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -49,11 +48,5 @@ class AppServiceProvider extends ServiceProvider
         Category::observe(AuditingObserver::class);
         Report::observe(AuditingObserver::class);
         Announcement::observe(AuditingObserver::class);
-
-        Gate::before(function ($user, $ability) {
-            if ($user?->isSuperAdmin()) {
-                return true;
-            }
-        });
     }
 }
