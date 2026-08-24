@@ -6,6 +6,8 @@ use App\Livewire\Chat;
 use App\Models\Conversation;
 use App\Models\Item;
 use App\Models\Message;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\Concerns\CreatesBuildingStructure;
 use Tests\TestCase;
@@ -121,5 +123,31 @@ class ChatTest extends TestCase
             ->call('toggleBlock');
 
         $this->assertDatabaseMissing('blocks', ['blocker_id' => $a->id, 'blocked_id' => $b->id]);
+    }
+
+    public function test_message_can_be_sent_with_attachment(): void
+    {
+        Storage::fake('public');
+
+        $a = $this->createResident();
+        $b = $this->createResident();
+
+        $conversation = Conversation::create();
+        $conversation->participants()->attach([$a->id, $b->id]);
+
+        $file = UploadedFile::fake()->image('photo.jpg');
+
+        Livewire::actingAs($a)
+            ->test(Chat::class, ['conversation' => $conversation])
+            ->set('attachment', $file)
+            ->call('send')
+            ->assertHasNoErrors();
+
+        $message = Message::where('conversation_id', $conversation->id)->first();
+
+        $this->assertNotNull($message);
+        $this->assertNotNull($message->attachment);
+        $this->assertSame('photo.jpg', $message->attachment_name);
+        Storage::disk('public')->assertExists($message->attachment);
     }
 }
