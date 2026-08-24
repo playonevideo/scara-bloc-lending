@@ -18,9 +18,14 @@ class NewMessage extends Notification
 
     public function toArray(object $notifiable): array
     {
-        $preview = $this->message->body
-            ? mb_strimwidth($this->message->body, 0, 80, '…')
-            : '📎 A trimis un fișier';
+        $preview = $this->message->body;
+
+        if (! $preview) {
+            $count = $this->message->attachments()->count();
+            $preview = $count > 1 ? "📎 A trimis {$count} fișiere" : '📎 A trimis un fișier';
+        } else {
+            $preview = mb_strimwidth($preview, 0, 80, '…');
+        }
 
         return [
             'title' => 'Mesaj nou',

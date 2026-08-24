@@ -13,32 +13,14 @@ class ConversationController extends Controller
 {
     public function index(Request $request): View
     {
-        $user = $request->user();
-
-        $conversations = $user->conversations()
-            ->with(['participants', 'messages.sender', 'object'])
-            ->get()
-            ->filter(fn (Conversation $c) => $c->messages->isNotEmpty())
-            ->map(function (Conversation $c) use ($user) {
-                $c->setAttribute('unread', $c->messages
-                    ->where('sender_id', '!=', $user->id)
-                    ->whereNull('read_at')
-                    ->count());
-
-                return $c;
-            })
-            ->sortByDesc(fn (Conversation $c) => $c->lastMessage()?->created_at);
-
-        return view('conversations.index', ['conversations' => $conversations]);
+        return view('conversations.index', ['conversation' => null]);
     }
 
     public function show(Request $request, Conversation $conversation): View
     {
         $this->authorize('view', $conversation);
 
-        $conversation->load(['messages.sender', 'object']);
-
-        return view('conversations.show', [
+        return view('conversations.index', [
             'conversation' => $conversation,
         ]);
     }
