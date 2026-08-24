@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use App\Enums\Concerns\HasLabels;
 
-enum ReportReason: string
+enum ReportReason: string implements \Filament\Support\Contracts\HasLabel
 {
     use HasLabels;
 
