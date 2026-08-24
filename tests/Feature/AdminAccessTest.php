@@ -44,4 +44,11 @@ class AdminAccessTest extends TestCase
 
         $this->actingAs($admin)->get('/obiecte')->assertRedirect('/admin');
     }
+
+    public function test_admin_can_access_documentation_page(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->get('/admin/documentatie')->assertOk();
+    }
 }
