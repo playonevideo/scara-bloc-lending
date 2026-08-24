@@ -6,8 +6,7 @@
     <h1 class="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl">Împrumuturi</h1>
 
     <div class="mb-6 flex gap-1 rounded-xl bg-gray-100 p-1">
-        @foreach ([['active' => 'Active'], ['requests' => 'Cereri primite'], ['sent' => 'Trimise de mine']] as $tabItem)
-            @php [$key, $label] = $tabItem; @endphp
+        @foreach ([['active', 'Active'], ['requests', 'Cereri primite'], ['sent', 'Trimise de mine']] as [$key, $label])
             <a href="{{ route('loans.index', ['tab' => $key]) }}"
                 @class([
                     'flex-1 rounded-lg px-3 py-2 text-center text-sm font-medium transition',
