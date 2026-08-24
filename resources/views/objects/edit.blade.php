@@ -27,7 +27,7 @@
                     <div class="grid grid-cols-3 gap-3 sm:grid-cols-4">
                         @foreach ($object->images as $image)
                             <label class="group relative aspect-square cursor-pointer overflow-hidden rounded-xl">
-                                <img src="{{ \Illuminate\Support\Facades\Storage::url($image->path) }}" alt="" class="h-full w-full object-cover">
+                                <img src="/storage/{{ $image->path }}" alt="" class="h-full w-full object-cover">
                                 <input type="checkbox" name="remove_images[]" value="{{ $image->id }}" class="peer sr-only">
                                 <span class="absolute inset-0 hidden items-center justify-center bg-black/50 text-2xl text-white peer-checked:flex">✕</span>
                             </label>
