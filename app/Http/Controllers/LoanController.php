@@ -7,6 +7,7 @@ use App\Http\Requests\StoreLoanRequest;
 use App\Models\Item;
 use App\Models\Loan;
 use App\Models\Review;
+use App\Notifications\ReviewReceived;
 use App\Services\LoanService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -122,7 +123,7 @@ class LoanController extends Controller
             'comment' => ['nullable', 'string', 'max:2000'],
         ]);
 
-        Review::updateOrCreate(
+        $review = Review::updateOrCreate(
             ['loan_id' => $loan->id, 'reviewer_id' => $request->user()->id],
             [
                 'reviewee_id' => $loan->otherParty($request->user())->id,
@@ -130,6 +131,8 @@ class LoanController extends Controller
                 'comment' => $request->input('comment'),
             ]
         );
+
+        $review->reviewee->notify(new ReviewReceived($review));
 
         return back()->with('status', 'Recenzia a fost salvată. Mulțumim!');
     }

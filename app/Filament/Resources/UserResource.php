@@ -140,6 +140,10 @@ class UserResource extends Resource
                             'is_blocked' => ! $record->is_blocked,
                             'blocked_at' => $record->is_blocked ? null : now(),
                         ]);
+
+                        if ($record->is_blocked) {
+                            $record->notify(new \App\Notifications\AccountSuspended());
+                        }
                     }),
                 Tables\Actions\EditAction::make(),
             ])
