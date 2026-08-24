@@ -14,13 +14,13 @@
         <div>
             <label for="password" class="block text-sm font-medium text-gray-700">Parolă nouă</label>
             <input id="password" type="password" name="password" required autocomplete="new-password"
-                class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500">
+                class="mt-1 block w-full rounded-xl border-0 bg-gray-100 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:bg-white focus:ring-2 focus:ring-brand-500">
         </div>
 
         <div>
             <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirmă parola</label>
             <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password"
-                class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500">
+                class="mt-1 block w-full rounded-xl border-0 bg-gray-100 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:bg-white focus:ring-2 focus:ring-brand-500">
         </div>
 
         <button type="submit"

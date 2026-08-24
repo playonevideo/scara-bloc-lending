@@ -12,7 +12,7 @@
         <div>
             <label for="email" class="block text-sm font-medium text-gray-700">Adresă de email</label>
             <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email"
-                class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500">
+                class="mt-1 block w-full rounded-xl border-0 bg-gray-100 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:bg-white focus:ring-2 focus:ring-brand-500">
         </div>
 
         <button type="submit"
