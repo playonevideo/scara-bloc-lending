@@ -12,7 +12,6 @@
         <div>
             <label for="code" class="block text-sm font-medium text-gray-700">Cod de invitație</label>
             <input id="code" type="text" name="code" value="{{ old('code') }}" required autofocus autocomplete="off"
-                placeholder="ex. VECINI2026"
                 class="mt-1 block w-full rounded-xl border-0 bg-gray-100 px-4 py-2.5 text-center text-lg font-semibold uppercase tracking-widest text-gray-900 placeholder-gray-400 focus:bg-white focus:ring-2 focus:ring-brand-500">
             @error('code')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
