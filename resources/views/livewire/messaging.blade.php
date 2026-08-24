@@ -181,9 +181,12 @@
                     <p class="mb-2 text-center text-xs text-gray-500">Nu poți trimite mesaje acestui utilizator.</p>
                 @endif
 
-                <div x-show="uploading" x-cloak class="mb-2">
+                <div wire:loading wire:target="attachments" class="mb-2">
                     <div class="flex items-center justify-between text-xs text-gray-500">
-                        <span>Se încarcă fișierele…</span>
+                        <span class="inline-flex items-center gap-1.5">
+                            <svg class="h-3.5 w-3.5 animate-spin text-brand-600" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path></svg>
+                            Se încarcă fișierele…
+                        </span>
                         <span x-text="Math.round(progress) + '%'"></span>
                     </div>
                     <div class="mt-1 h-2 overflow-hidden rounded-full bg-gray-100">
