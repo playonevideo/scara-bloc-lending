@@ -40,6 +40,14 @@
             <h2 class="font-semibold text-gray-900">Numărul de telefon pentru 2FA</h2>
             <p class="mt-1 text-sm text-gray-500">Numărul curent: <strong>{{ $user->phone ?? '—' }}</strong></p>
 
+            @if ($user->phone)
+                <form method="POST" action="{{ route('security.remove-phone') }}" class="mt-2"
+                    onsubmit="return confirm('Sigur dorești să elimini numărul de telefon pentru 2FA?')">
+                    @csrf
+                    <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-700">Elimină numărul</button>
+                </form>
+            @endif
+
             <form method="POST" action="{{ route('security.change-phone') }}" class="mt-4 space-y-4">
                 @csrf
                 <div>

@@ -39,6 +39,19 @@ class SecurityController extends Controller
         return back()->with('status', 'Autentificarea în doi pași a fost activată.');
     }
 
+    public function removePhone(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        $user->update([
+            'phone' => null,
+            'phone_verified_at' => null,
+            'two_factor_enabled' => false,
+        ]);
+
+        return back()->with('status', 'Numărul de telefon pentru 2FA a fost eliminat.');
+    }
+
     public function updatePassword(Request $request): RedirectResponse
     {
         $user = $request->user();
