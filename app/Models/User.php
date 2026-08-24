@@ -8,8 +8,8 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -83,16 +83,11 @@ class User extends Authenticatable implements FilamentUser, WebAuthnAuthenticata
         return $this->hasMany(Loan::class, 'lender_id');
     }
 
-    public function conversations(): HasManyThrough
+    public function conversations(): BelongsToMany
     {
-        return $this->hasManyThrough(
-            Conversation::class,
-            ConversationParticipant::class,
-            'user_id',
-            'conversation_id',
-            'id',
-            'id'
-        );
+        return $this->belongsToMany(Conversation::class, 'conversation_participants')
+            ->withPivot('last_read_at', 'archived_at')
+            ->withTimestamps();
     }
 
     public function reviewsReceived(): HasMany
