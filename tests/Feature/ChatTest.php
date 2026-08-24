@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Livewire\Chat;
+use App\Livewire\Messaging;
 use App\Models\Conversation;
 use App\Models\Item;
 use App\Models\Message;
@@ -31,6 +31,13 @@ class ChatTest extends TestCase
         $this->assertDatabaseHas('conversation_participants', ['user_id' => $owner->id]);
     }
 
+    public function test_messaging_index_renders(): void
+    {
+        $user = $this->createResident();
+
+        $this->actingAs($user)->get('/mesaje')->assertOk();
+    }
+
     public function test_non_participant_cannot_view_conversation(): void
     {
         $a = $this->createResident();
@@ -52,7 +59,7 @@ class ChatTest extends TestCase
         $conversation->participants()->attach([$a->id, $b->id]);
 
         Livewire::actingAs($a)
-            ->test(Chat::class, ['conversation' => $conversation])
+            ->test(Messaging::class, ['conversationId' => $conversation->id])
             ->set('body', 'Salut!')
             ->call('send')
             ->assertHasNoErrors();
@@ -79,7 +86,7 @@ class ChatTest extends TestCase
         ]);
 
         Livewire::actingAs($a)
-            ->test(Chat::class, ['conversation' => $conversation])
+            ->test(Messaging::class, ['conversationId' => $conversation->id])
             ->call('deleteMessage', $message->id);
 
         $this->assertDatabaseMissing('messages', ['id' => $message->id]);
@@ -96,7 +103,7 @@ class ChatTest extends TestCase
         $a->blocks()->create(['blocked_id' => $b->id]);
 
         Livewire::actingAs($a)
-            ->test(Chat::class, ['conversation' => $conversation])
+            ->test(Messaging::class, ['conversationId' => $conversation->id])
             ->set('body', 'Salut')
             ->call('send')
             ->assertHasErrors('body');
@@ -113,13 +120,13 @@ class ChatTest extends TestCase
         $conversation->participants()->attach([$a->id, $b->id]);
 
         Livewire::actingAs($a)
-            ->test(Chat::class, ['conversation' => $conversation])
+            ->test(Messaging::class, ['conversationId' => $conversation->id])
             ->call('toggleBlock');
 
         $this->assertDatabaseHas('blocks', ['blocker_id' => $a->id, 'blocked_id' => $b->id]);
 
         Livewire::actingAs($a)
-            ->test(Chat::class, ['conversation' => $conversation])
+            ->test(Messaging::class, ['conversationId' => $conversation->id])
             ->call('toggleBlock');
 
         $this->assertDatabaseMissing('blocks', ['blocker_id' => $a->id, 'blocked_id' => $b->id]);
@@ -138,16 +145,20 @@ class ChatTest extends TestCase
         $file = UploadedFile::fake()->image('photo.jpg');
 
         Livewire::actingAs($a)
-            ->test(Chat::class, ['conversation' => $conversation])
-            ->set('attachment', $file)
+            ->test(Messaging::class, ['conversationId' => $conversation->id])
+            ->set('attachments', [$file])
             ->call('send')
             ->assertHasNoErrors();
 
         $message = Message::where('conversation_id', $conversation->id)->first();
 
         $this->assertNotNull($message);
-        $this->assertNotNull($message->attachment);
-        $this->assertSame('photo.jpg', $message->attachment_name);
-        Storage::disk('public')->assertExists($message->attachment);
+        $this->assertDatabaseHas('message_attachments', [
+            'message_id' => $message->id,
+            'name' => 'photo.jpg',
+        ]);
+
+        $attachment = $message->attachments()->first();
+        Storage::disk('public')->assertExists($attachment->path);
     }
 }

@@ -146,7 +146,7 @@
         </div>
     </header>
 
-    <main class="mx-auto max-w-6xl px-4 pb-28 pt-6 sm:px-6 md:pb-12">
+    <main class="@yield('mainClass', 'mx-auto max-w-6xl px-4 pb-28 pt-6 sm:px-6 md:pb-12')">
         @yield('content')
     </main>
 
